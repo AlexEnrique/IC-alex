@@ -14,11 +14,3 @@
  #include <stdlib.h>
  #include <math.h>
  #include <gsl/gsl_rng.h>
-
-void initialize(short &lattice) {
-  // Equaly distributed random initialization
-  
-
-
-
-}
