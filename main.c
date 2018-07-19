@@ -11,6 +11,7 @@
 #include <math.h>
 #include "functions.h"
 #include "random_generator.h"
+#include "type_observables.h"
 
 // Move those defs to a separated file after
 #define MAX_MC_LOOPS 10000
@@ -32,8 +33,9 @@ int main () {
   // Declaration of variables (and others structures)
   unsigned int n, size; // número de sítios em cada dimensão
   short **lattice;
-  double T, dT, minT, tempE, *E, avgE;
+  double T, dT, minT, *E, avgE;
   lattice_position pos;
+  type_observables obsrv;
 
   // Initialization of variables (and others)
   n = N_LATTICE_TEST;
@@ -61,7 +63,7 @@ int main () {
     transientFloatSpins(&lattice);
 
     // Observables tests for the program
-    tempE = totalEnergy(&lattice);
+    obsrv.energy = totalEnergy(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
@@ -69,15 +71,15 @@ int main () {
       for (unsigned int j = 0; j < MAX_METR_LOOPS; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) {
-          adjustObservables(&tempE);
-          // E += 2 * deltaE(lattice, pos);
+          adjustObservables(obsrv, pos, lattice);
+          // Energy += 2 * deltaE(lattice, pos);
         }
       }
       // Store the new observables
-      E[i] = tempE;
+      E[i] = obsrv.energy;
 
     }
-    avgE = sum(E)/MAX_MC_LOOPS;
+    avgE = sum(E, MAX_MC_LOOPS)/MAX_MC_LOOPS;
     avgE /= size; // avgE per site
 
     // output data
