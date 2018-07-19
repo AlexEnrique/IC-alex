@@ -12,7 +12,7 @@
 #include "functions.h"
 #include "random_generator.h"
 
-// Move this defs to a separated file after
+// Move those defs to a separated file after
 #define MAX_MC_LOOPS 10000
 #define MAX_METR_LOOPS 10000 // change to size of the lattice (at the final version)?
 #define INITIAL_TEMPERATURE 5.0
@@ -87,6 +87,6 @@ int main () {
 
   fclose(filePtr);
   stopRNG();
-  
+
   return 0;
 }
