@@ -49,6 +49,7 @@ int main () {
   }
 
   // Create and initialize lattice with random spins variables
+  startRNG();
   initialize(&lattice, n);
 
   // file to store the calculations
@@ -87,5 +88,6 @@ int main () {
   }
 
   fclose(filePtr);
+  stopRNG();
   return 0;
 }
