@@ -65,8 +65,8 @@ void raffleRandomPosition(lattice_position *pos, unsigned int n) {
   /* the range of 'x' and 'y' in lattice[x][y] is  *
    * from 0 (inclusive) to n (exclusive), like the *
    * gsl_rng_uniform_int() function above.         */
-  (*pos).x = gsl_rng_uniform_int(rng, n);
-  (*pos).y = gsl_rng_uniform_int(rng, n);
+  pos->x = gsl_rng_uniform_int(rng, n);
+  pos->y = gsl_rng_uniform_int(rng, n);
 }
 
 short spinFlipped(lattice_position pos, short ***lattice) {
@@ -104,7 +104,7 @@ double sum(double **arr, unsigned int lenght) {
 
 // typedef struct type_observables defined in "type_observables.h"
 void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice) {
-  obsrv -> energy += deltaE(posFlip, lattice);
+  obsrv->energy += deltaE(posFlip, lattice);
 }
 
 double totalEnergy(short **lattice) {
