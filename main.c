@@ -56,18 +56,16 @@ int main () {
   // file to store the calculations
   FILE *filePtr = fopen(FILE_NAME, "w");
 
-
   while (T > (minT - dT)) {
     // Float the spins for disregarding transient states
     transientFloatSpins(&lattice);
 
     // Observables tests for the program
-    // M = totalMagnetization(&lattice);
     tempE = totalEnergy(&lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
-      // Metropolis (Fluctuation) loops
+      // Metropolis (Fluctuations) loops
       for (unsigned int j = 0; j < MAX_METR_LOOPS; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) {
@@ -83,12 +81,12 @@ int main () {
     avgE /= size; // avgE per site
 
     // output data
+    // print T, <E>
     fprintf(filePtr, "%lf\t%lf\n", T, avgE);
-    // Print T, <M> (per spin), <M^2> (per spin),
-    // susceptibility (X) per spin, <E>, <E^2>, C (heat cap.)
   }
 
   fclose(filePtr);
   stopRNG();
+  
   return 0;
 }
