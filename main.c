@@ -57,7 +57,7 @@ int main () {
 
   while (T > (minT - dT)) {
     // Float the spins for disregarding transient states
-    floatSpins(&lattice);
+    transientFloatSpins(&lattice);
 
     // Observables tests for the program
     // M = totalMagnetization(&lattice);
