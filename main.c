@@ -14,8 +14,9 @@
 // Move this defs to a separated file after
 #define MAX_MC_LOOPS 10000
 #define MAX_METR_LOOPS 10000 // change to size of the lattice (at the final version)?
-#define T_INITIAL 5.0
+#define INITIAL_TEMPERATURE 5.0
 #define DELTA_T 0.1
+#define MIN_TEMPERATURE 0.5
 #define N_LATTICE_TEST 3
 
 struct lattice_position {
@@ -30,14 +31,15 @@ int main () {
   // Declaration of variables (and others structures)
   unsigned int n, size; // número de sítios em cada dimensão
   short **lattice;
-  double T, dT, tempE, *E, avgE;
+  double T, dT, minT, tempE, *E, avgE;
   lattice_position pos;
 
   // Initialization of variables (and others)
   n = N_LATTICE_TEST;
   size = pow(n,2);
-  T = T_INITIAL
-  dT = DELTA_T
+  T = INITIAL_TEMPERATURE;
+  dT = DELTA_T;
+  minT = MIN_TEMPERATURE;
 
   E = malloc(MAX_MC_LOOPS * sizeof(*E));
 
