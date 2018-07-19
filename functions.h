@@ -15,6 +15,14 @@
 #include <math.h>
 #include "random_generator.h"
 
+struct lattice_position {
+  /* Using modular arithmetics, periodic boundary  *
+   * conditions can be performed. This is why just *
+   * using unsigned integer variables for x and y  */
+  unsigned int x;
+  unsigned int y;
+}
+
 // All functions
 // Functions of the 'random_generator' header
 unsigned long int rdtsc();
