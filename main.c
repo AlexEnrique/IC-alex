@@ -78,7 +78,7 @@ int main () {
 
     }
     avgE = sum(E)/MAX_MC_LOOPS;
-    avgE /= size; // avgE per sitio
+    avgE /= size; // avgE per site
 
     // output data
     fprintf(filePtr, "%lf\t%lf\n", T, avgE);
