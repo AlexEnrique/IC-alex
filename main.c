@@ -49,7 +49,7 @@ int main () {
   }
 
   // Create and initialize lattice with random spins variables
-  initialize(&lattice);
+  initialize(&lattice, n);
 
   // file to store the calculations
   FILE *filePtr = fopen(FILE_NAME, "w");
