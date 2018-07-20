@@ -26,7 +26,7 @@ void stopRNG();
 // Functions of this header =====================================
 double totalEnergy(short **lattice)
 double deltaE(lattice_position pos, short **lattice);
-double sum(double **arr, unsigned int lenght);
+double sum(double *arr, unsigned int lenght);
 short spinFlipped(lattice_position pos, short ***lattice);
 void raffleRandomPosition(lattice_position *pos, unsigned int n);
 void transientFloatSpins(short ***lattice, unsigned int size);
@@ -92,11 +92,11 @@ double deltaE(lattice_position pos, short **lattice) {
   return ( (-2) * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
-double sum(double **arr, unsigned int lenght) {
+double sum(double *arr, unsigned int lenght) {
   double S = 0;
 
   for (unsigned int i = 0; i < lenght; i++) {
-    S += (*arr)[i];
+    S += arr[i];
   }
 
   return S;
@@ -108,5 +108,5 @@ void adjustObservables(type_observables &obsrv, lattice_position posFlip, short 
 }
 
 double totalEnergy(short **lattice) {
-
+  
 }
