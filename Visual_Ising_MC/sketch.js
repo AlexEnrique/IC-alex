@@ -1,23 +1,18 @@
-// variables in the 'variables.js' file
-
-function createLattice(cols, rows) {
-  let arr = new Array(cols);
-  for (var i = 0; i < arr.length; i++) {
-    arr[i] = new Array(rows);
-  }
-
-  return arr;
-}
+let cols;
+let rows;
+let resolution = 10;
+let temperature = 5.0;
+var lattice;
 
 function setup() {
-  createCanvas(width, height);
+  createCanvas(800, 600);
   cols = width / resolution;
   rows = height / resolution;
 
   lattice = createLattice(cols, rows);
   for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < cols; j++) {
-      lattice[i][j] = randomSpin();
+    for (let j = 0; j < rows; j++) {
+      lattice[i][j] = -1;
     }
   }
 
@@ -25,8 +20,6 @@ function setup() {
 }
 
 function draw() {
-
-
   fluctuateLattice();
 
   for (let i = 0; i < cols; i++) {
@@ -35,8 +28,9 @@ function draw() {
       let y = j * resolution;
       if (lattice[i][j] == 1) {
         fill(255);
-        stroke(0);
-        rect(x, y, resolution-1, resolution-1);
+        // stroke(0);
+        noStroke();
+        rect(x, y, resolution, resolution);
       }
     }
   }
