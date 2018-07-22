@@ -13,6 +13,20 @@ function randomSpin() {
   return 1;
 }
 
+// declare pos as a local variable to use this in the draw() function after
+var pos = new LatticePosition();
+function fluctuateLattice() {
+  pos.choseRandomPosition();
+
+  let dE = deltaE(pos);
+  if (dE < 0 || random() < exp(-beta*dE)) {
+    flip(pos);
+    return 1;
+  }
+
+  return 0;
+}
+
 function flip(pos) {
   lattice[pos.x][pos.y] *= -1;
 }
@@ -25,8 +39,6 @@ function LatticePosition(x, y) {
 LatticePosition.prototype.choseRandomPosition = function() {
   this.x = floor(random(cols));
   this.y = floor(random(rows));
-  // if (this.x == 0 || this.y == 0) {
-  // }
 }
 
 function deltaE(pos) {
@@ -41,21 +53,9 @@ function deltaE(pos) {
   sum += lattice[pos.x][(pos.y - 1 + rows) % rows];
   sum += lattice[pos.x][(pos.y + 1) % rows];
 
-  return  (-lattice[pos.x][pos.y]) * sum;
+  return ( 2 * J * (-lattice[pos.x][pos.y]) * sum);
 }
 
-function fluctuateLattice(lattice) {
-  var pos = new LatticePosition();
-  pos.choseRandomPosition();
-  // console.log(pos.x, pos.y);
-  // console.table(lattice);
-  // // console.log(lattice[pos.x][pos.y]);
+function totalEnergy() {
 
-  if (deltaE(pos) < 0) {
-    flip(pos);
-    // console.log(pos.x, pos.y);
-  }
-  // else if ( random() < exp(-E/(bet*T)) ) {
-  //   flip(pos);
-  // }
 }
