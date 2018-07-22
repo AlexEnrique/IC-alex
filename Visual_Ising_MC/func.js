@@ -1,3 +1,12 @@
+function createLattice(cols, rows) {
+  let arr = new Array(cols);
+  for (var i = 0; i < arr.length; i++) {
+    arr[i] = new Array(rows);
+  }
+
+  return arr;
+}
+
 function randomSpin() {
   if (floor(random(2)))
     return -1;
@@ -14,56 +23,37 @@ function LatticePosition(x, y) {
 }
 
 LatticePosition.prototype.choseRandomPosition = function() {
-  this.x = floor(random(rows));
-  this.y = floor(random(cols));
+  this.x = floor(random(cols));
+  this.y = floor(random(rows));
+  // if (this.x == 0 || this.y == 0) {
+  // }
 }
 
 function deltaE(pos) {
-  // periodic boundary conditions
-  var xUpper, xLower, yUpper, yLower;
-  xUpper = pos.x + 1;
-  xLower = pos.x - 1;
-  yUpper = pos.y + 1;
-  yLower = pos.y - 1;
+  /* !Periodic boundary conditions!
+   * in JavaScript -1 % 10 == -1. If pos.x (or y) is 0 then
+   * I need to shift to something like (-1 + 10) % 10 to get
+   * the right result for periodic boundary conditions.
+   * this is why is write (pos.x -1 + cols) % cols below.
+   */
+  var sum = lattice[(pos.x - 1 + cols) % cols][pos.y];
+  sum += lattice[(pos.x + 1) % cols][pos.y];
+  sum += lattice[pos.x][(pos.y - 1 + rows) % rows];
+  sum += lattice[pos.x][(pos.y + 1) % rows];
 
-  if (pos.x == 0) {
-    xUpper = pos.x + 1;
-    xLower = lattice.length-1;
-  }
-  else if (pos.x == lattice.length - 1) {
-    xUpper = 0
-    xLower = pos.x - 1;
-  }
-
-  if (pos.y == 0) {
-    yUpper = pos.y + 1;
-    yLower = lattice[0].length;
-  }
-  else if (pos.y == lattice[0].length - 1) {
-    yUpper = 0;
-    yLower = pos.y - 1;
-  }
-
-  // console.log(pos.x, xLower, xUpper, pos.y, yLower, yUpper);
-  // console.log(lattice[(pos.x - 1) % rows][pos.y]);
-  var sum = lattice[xUpper][pos.y];
-  sum += lattice[xLower][pos.y];
-  sum += lattice[pos.x][yUpper];
-  sum += lattice[pos.x][yLower];
-
-  return ((-2) * lattice[pos.x][pos.y] * sum);
+  return  (-lattice[pos.x][pos.y]) * sum;
 }
 
 function fluctuateLattice(lattice) {
   var pos = new LatticePosition();
   pos.choseRandomPosition();
-  // console.log(pos.x);
-  // console.log(pos.y);
+  // console.log(pos.x, pos.y);
   // console.table(lattice);
   // // console.log(lattice[pos.x][pos.y]);
 
   if (deltaE(pos) < 0) {
     flip(pos);
+    // console.log(pos.x, pos.y);
   }
   // else if ( random() < exp(-E/(bet*T)) ) {
   //   flip(pos);
