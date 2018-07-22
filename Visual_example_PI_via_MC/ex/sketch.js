@@ -11,7 +11,6 @@ function setup() {
 
 function draw() {
   let radius = height;
-  let maxiterations = 1000;
 
   translate(width/2, height/2);
   noStroke();
@@ -29,7 +28,7 @@ function draw() {
   fill(color2);
   ellipse(x, y, 3);
 
-  console.log("PI: "+4*m/n);
+  console.log("PI: " + 4*m/n);
 
   // noLoop();
 
