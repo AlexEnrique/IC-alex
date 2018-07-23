@@ -46,7 +46,7 @@ function deltaE(pos) {
    * in JavaScript -1 % 10 == -1. If pos.x (or y) is 0 then
    * I need to shift to something like (-1 + 10) % 10 to get
    * the right result for periodic boundary conditions.
-   * this is why is write (pos.x -1 + cols) % cols below.
+   * this is why it's write (pos.x -1 + cols) % cols below.
    */
   var sum = lattice[(pos.x - 1 + cols) % cols][pos.y];
   sum += lattice[(pos.x + 1) % cols][pos.y];

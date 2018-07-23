@@ -9,7 +9,7 @@ var total = 0;
 let J = 1.0;
 let k = 1.38064852e-23;
 let phaseTransitionTemp = 2*J/(k*Math.log(1+Math.sqrt(2))); // Kelvin
-let temperature = 1E25; // Kelvin
+let temperature = phaseTransitionTemp/2; // Kelvin
 let beta = 1/(k*temperature);
 var lattice;
 

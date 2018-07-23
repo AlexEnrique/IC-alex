@@ -1,6 +1,6 @@
 # Visualization for the Ising Model.
 
-1 - Download all this files to a folder. 
+1 - Download all this files to a folder.
 
 2 - Open "index.html" using an internet browser.
 
