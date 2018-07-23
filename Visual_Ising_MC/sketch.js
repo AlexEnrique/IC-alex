@@ -7,14 +7,15 @@ var total = 0;
 
 // Physical variables
 let J = 1.0;
-let phaseTransitionTemp = Math.log(Math.sqrt(2) + 1)/2; // Kelvin
-let temperature = 1.0E-50; // Kelvin
 let k = 1.38064852e-23;
+let phaseTransitionTemp = 2*J/(k*Math.log(1+Math.sqrt(2))); // Kelvin
+let temperature = 1E25; // Kelvin
 let beta = 1/(k*temperature);
 var lattice;
 
 function setup() {
-  createCanvas(400, 300);
+  // console.log(phaseTransitionTemp);
+  createCanvas(600, 400);
   cols = width / resolution;
   rows = height / resolution;
 
@@ -23,6 +24,7 @@ function setup() {
     for (let j = 0; j < rows; j++) {
       lattice[i][j] = randomSpin();
       // lattice[i][j] = -1;
+      // lattice[i][j] = ((i+j) % 2) ? 1:-1;
     }
   }
 
@@ -61,7 +63,7 @@ function draw() {
     rect(pos.x * resolution, pos.y * resolution, resolution, resolution);
   }
 
-  console.log("F:"+(countFlip/total));
+  // console.log("F:"+(countFlip/total));
 
 
   // noLoop();
