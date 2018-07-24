@@ -104,7 +104,7 @@ double sum(double *arr, unsigned int lenght) {
 
 // typedef struct type_observables defined in "type_observables.h"
 void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice) {
-  obsrv->energy += deltaE(posFlip, lattice);
+  obsrv->energy += dE;
 }
 
 double totalEnergy(short **lattice) {
