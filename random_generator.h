@@ -27,5 +27,5 @@ void startRNG() {
 }
 
 void stopRNG() {
-  gsl_rng_free(r);
+  gsl_rng_free(rng);
 }
