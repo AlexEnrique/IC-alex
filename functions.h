@@ -9,6 +9,8 @@
 #include "random_generator.h"
 #include "type_observables.h"
 
+double dE; // move this global variable to an extern file or remove it
+
 struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
    * conditions can be performed. This is why just *
@@ -70,7 +72,7 @@ void raffleRandomPosition(lattice_position *pos, unsigned int n) {
 }
 
 short spinFlipped(lattice_position pos, short ***lattice) {
-  if (deltaE(pos, *lattice) > 0) {
+  if (dE = deltaE(pos, *lattice) > 0) {
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }
@@ -94,10 +96,8 @@ double deltaE(lattice_position pos, short **lattice) {
 
 double sum(double *arr, unsigned int lenght) {
   double S = 0;
-
-  for (unsigned int i = 0; i < lenght; i++) {
+  for (unsigned int i = 0; i < lenght; i++)
     S += arr[i];
-  }
 
   return S;
 }
