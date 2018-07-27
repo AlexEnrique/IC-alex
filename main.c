@@ -29,6 +29,24 @@ struct lattice_position {
   unsigned int y;
 }
 
+// All functions ============================================================
+// Functions of the 'random_generator' header
+unsigned long int rdtsc();
+void startRNG();
+void stopRNG();
+// Functions of the "function.h" header =====================================
+double totalEnergy(short **lattice)
+double deltaE(lattice_position pos, short **lattice);
+double sum(double *arr, unsigned int lenght);
+short spinFlipped(lattice_position pos, short ***lattice);
+void raffleRandomPosition(lattice_position *pos, unsigned int n);
+void transientFloatSpins(short ***lattice, unsigned int size);
+void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice);
+void spinFlipped(lattice_position pos, short ***lattice);
+void initialize(short ***lattice, unsigned int n);
+double totalEnergy(short **lattice, unsigned int n);
+// ===========================================================================
+
 int main () {
   // Declaration of variables (and others structures)
   unsigned int n, size; // número de sítios em cada dimensão
