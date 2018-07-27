@@ -8,7 +8,7 @@
 double dE;
 unsigned int n = 3; // 3 para teste
 
-typedef struct lattice_position {
+struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
    * conditions can be performed. This is why just *
    * using unsigned integer variables for x and y  */
@@ -18,9 +18,9 @@ typedef struct lattice_position {
 
 // All functions ===============================================
 // Functions of the 'random_generator' header
-extern unsigned long int rdtsc();
-extern void startRNG();
-extern void stopRNG();
+unsigned long int rdtsc();
+void startRNG();
+void stopRNG();
 
 // Functions of this header =====================================
 double deltaE(struct lattice_position pos, short **lattice);

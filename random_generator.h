@@ -6,7 +6,7 @@
  * algorithm developed by Luscher, but modified to generate   *
  * number with a lower correlation than the original one      *
  * original algorithm.                                        */
-const unsigned long int seed;
+unsigned long int seed;
 gsl_rng *rng;
 
 // unsigned long int rdtsc();
@@ -21,7 +21,7 @@ unsigned long int rdtsc() {
 }
 
 void startRNG() {
-  const double seed = rdtsc();
+  seed = rdtsc();
   rng = gsl_rng_alloc(gsl_rng_ranlux389);
   gsl_rng_set(rng, seed);
 }

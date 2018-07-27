@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+// #include "extern_func_declarations.h"
 #include "random_generator.h"
 #include "type_observables.h"
 #include "functions.h"
@@ -22,28 +23,28 @@
 #define N_LATTICE_TEST 3
 #define FILE_NAME "teste.dat"
 
-typedef struct lattice_position {
-  /* Using modular arithmetics, periodic boundary  *
-   * conditions can be performed. This is why just *
-   * using unsigned integer variables for x and y  */
-  unsigned int x;
-  unsigned int y;
-};
+// struct lattice_position {
+//   /* Using modular arithmetics, periodic boundary  *
+//    * conditions can be performed. This is why just *
+//    * using unsigned integer variables for x and y  */
+//   unsigned int x;
+//   unsigned int y;
+// };
 
 // All functions ============================================================
 // Functions of the 'random_generator' header
-extern unsigned long int rdtsc();
-extern void startRNG();
-extern void stopRNG();
-// Functions of the "function.h" header =====================================
-extern double deltaE(struct lattice_position pos, short **lattice);
-extern double sum(double *arr, unsigned int lenght);
-extern short spinFlipped(struct lattice_position pos, short ***lattice);
-extern void raffleRandomPosition(struct lattice_position *pos);
-extern void transientFloatSpins(short ***lattice, unsigned int size);
-extern void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
-extern void initialize(short ***lattice, unsigned int n);
-extern double totalEnergy(short **lattice);
+// unsigned long int rdtsc();
+// void startRNG();
+// void stopRNG();
+// // Functions of the "function.h" header =====================================
+// double deltaE(struct lattice_position pos, short **lattice);
+// double sum(double *arr, unsigned int lenght);
+// short spinFlipped(struct lattice_position pos, short ***lattice);
+// void raffleRandomPosition(struct lattice_position *pos);
+// void transientFloatSpins(short ***lattice, unsigned int size);
+// void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
+// void initialize(short ***lattice, unsigned int n);
+// double totalEnergy(short **lattice);
 // ===========================================================================
 
 int main () {
@@ -51,7 +52,7 @@ int main () {
   unsigned int n, size; // número de sítios em cada dimensão
   short **lattice;
   double T, dT, minT, *E, avgE;
-  struct lattice_position pos;
+  struct lattice_position {double x; double y;} pos;
   struct type_observables obsrv;
 
   // Initialization of variables (and others)
@@ -88,7 +89,7 @@ int main () {
       for (unsigned int j = 0; j < MAX_METR_LOOPS; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) {
-          adjustObservables(obsrv, pos, lattice);
+          adjustObservables(&obsrv, pos, lattice);
           // To add others observables after
         }
       }

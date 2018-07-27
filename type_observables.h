@@ -1,4 +1,4 @@
-typedef struct type_observables {
+struct type_observables {
   double energy;
   // double magnetization;
   // double sigmaZi;
