@@ -1,3 +1,6 @@
+#ifndef TYPE_OBSERVABLES
+#define TYPE_OBSERVABLES
+
 struct type_observables {
   double energy;
   // double magnetization;
@@ -6,3 +9,5 @@ struct type_observables {
   // double sigmaXi;
   // double sigmaXiXj;
 };
+
+#endif

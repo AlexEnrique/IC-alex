@@ -4,6 +4,9 @@
 #include "random_generator.h"
 #include "type_observables.h"
 
+#ifndef FUNCTIONS
+#define FUNCTIONS
+
 // move this global variable to an extern file or remove it
 double dE;
 unsigned int n = 3; // 3 para teste
@@ -114,3 +117,5 @@ double totalEnergy(short **lattice) {
 
   return H;
 }
+
+#endif

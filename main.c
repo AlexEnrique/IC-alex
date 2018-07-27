@@ -23,6 +23,7 @@
 #define N_LATTICE_TEST 3
 #define FILE_NAME "teste.dat"
 
+//
 // struct lattice_position {
 //   /* Using modular arithmetics, periodic boundary  *
 //    * conditions can be performed. This is why just *
@@ -30,9 +31,9 @@
 //   unsigned int x;
 //   unsigned int y;
 // };
-
-// All functions ============================================================
-// Functions of the 'random_generator' header
+//
+// // All functions ============================================================
+// // Functions of the 'random_generator' header
 // unsigned long int rdtsc();
 // void startRNG();
 // void stopRNG();
@@ -45,7 +46,7 @@
 // void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
 // void initialize(short ***lattice, unsigned int n);
 // double totalEnergy(short **lattice);
-// ===========================================================================
+// // ===========================================================================
 
 int main () {
   // Declaration of variables (and others structures)

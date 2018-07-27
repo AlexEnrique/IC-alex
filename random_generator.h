@@ -1,5 +1,7 @@
 #include <gsl/gsl_rng.h>
 
+#ifndef RANDOM_GENERATOR
+#define RANDOM_GENERATOR
 /* "gsl_rng *rng" creates an instance 'rng' of random number  *
  * of the type gsl_rng_ranlux389 (initialized in the          *
  * startRNG() function). It's an implementation of the        *
@@ -29,3 +31,5 @@ void startRNG() {
 void stopRNG() {
   gsl_rng_free(rng);
 }
+
+#endif
