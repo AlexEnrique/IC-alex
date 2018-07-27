@@ -3,13 +3,14 @@
 #include <math.h>
 #include "random_generator.h"
 #include "type_observables.h"
+#include "extern_defs_var.h"
 
 #ifndef FUNCTIONS
 #define FUNCTIONS
 
 // move this global variable to an extern file or remove it
 double dE;
-unsigned int n = 3; // 3 para teste
+unsigned int n = N_LATTICE_TEST;
 
 struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
@@ -44,7 +45,7 @@ void initialize(short ***lattice, unsigned int n) {
     for (unsigned int y = 0; y < n; y++) {
       // generates an unsigned integer in the interval [0:10)
       randomNo = gsl_rng_uniform_int(rng, 10);
-      (*lattice)[x][y] = ((randomNo < 6) ? -1 : 1);
+      (*lattice)[x][y] = ((randomNo < 5) ? -1 : 1);
     }
   }
 
@@ -71,7 +72,7 @@ void raffleRandomPosition(struct lattice_position *pos) {
 }
 
 short spinFlipped(struct lattice_position pos, short ***lattice) {
-  if (dE = deltaE(pos, *lattice) < 0) { // T == 0
+  if ((dE = deltaE(pos, *lattice)) < 0) { // T == 0
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }
@@ -90,6 +91,7 @@ double deltaE(struct lattice_position pos, short **lattice) {
   neigbSum += lattice[pos.x][(pos.y+1)%n];
 
   // J = 1 (def.)
+  // printf("%d\n", ( 2 * (lattice[pos.x][pos.y]) * neigbSum ));
   return ( 2 * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
@@ -111,11 +113,22 @@ double totalEnergy(short **lattice) {
   double H = 0;
   for (unsigned int i = 0; i < n; i++) { // Nx == Ny == n
     for (unsigned int j = 0; j < n; j++) {
-      H += (-1) * lattice[i][j] * (lattice[i+1][j] + lattice[i][j+1]);
+      H += (-1) * lattice[i][j] * (lattice[(i+1)%n][j] + lattice[i][(j+1)%n]);
     }
   }
 
   return H;
+}
+
+void printLattice(short **lattice, unsigned int n) {
+  for (unsigned int i = 0; i < n; i++) {
+    for (unsigned int j = 0; j < n; j++) {
+      char c = (lattice[i][j] > 0) ? '+' : '-';
+      printf("%c ", c);
+    }
+    printf("\n");
+  }
+  printf("\n");
 }
 
 #endif

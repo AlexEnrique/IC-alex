@@ -1,3 +1,6 @@
+#ifndef ALL_FUNC_DEC
+#define ALL_FUNC_DEC
+
 // All functions ============================================================
 // Functions of the 'random_generator' header
 unsigned long int rdtsc();
@@ -14,3 +17,5 @@ void adjustObservables(struct type_observables *obsrv, struct lattice_position p
 void initialize(short ***lattice, unsigned int n);
 double totalEnergy(short **lattice);
 // ===========================================================================
+
+#endif
