@@ -18,9 +18,9 @@ typedef struct lattice_position {
 
 // All functions ===============================================
 // Functions of the 'random_generator' header
-// unsigned long int rdtsc();
-// void startRNG();
-// void stopRNG();
+extern unsigned long int rdtsc();
+extern void startRNG();
+extern void stopRNG();
 
 // Functions of this header =====================================
 double deltaE(struct lattice_position pos, short **lattice);
@@ -54,7 +54,7 @@ void transientFloatSpins(short ***lattice, unsigned int size) {
   for (unsigned int i = 0; i < 1000; i++) {
     for (unsigned int j = 0; j < size; j++) {
       raffleRandomPosition(&pos);
-      spinFlipped(pos, &lattice);
+      spinFlipped(pos, lattice);
     }
   }
 }

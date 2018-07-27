@@ -9,9 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "functions.h"
 #include "random_generator.h"
 #include "type_observables.h"
+#include "functions.h"
 
 // Move those defs to a separated file after
 #define MAX_MC_LOOPS 10000
@@ -30,21 +30,21 @@ typedef struct lattice_position {
   unsigned int y;
 };
 
-// // All functions ============================================================
-// // Functions of the 'random_generator' header
-// unsigned long int rdtsc();
-// void startRNG();
-// void stopRNG();
-// // Functions of the "function.h" header =====================================
-// double deltaE(struct lattice_position pos, short **lattice);
-// double sum(double *arr, unsigned int lenght);
-// short spinFlipped(struct lattice_position pos, short ***lattice);
-// void raffleRandomPosition(struct lattice_position *pos);
-// void transientFloatSpins(short ***lattice, unsigned int size);
-// void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
-// void initialize(short ***lattice, unsigned int n);
-// double totalEnergy(short **lattice);
-// // ===========================================================================
+// All functions ============================================================
+// Functions of the 'random_generator' header
+extern unsigned long int rdtsc();
+extern void startRNG();
+extern void stopRNG();
+// Functions of the "function.h" header =====================================
+extern double deltaE(struct lattice_position pos, short **lattice);
+extern double sum(double *arr, unsigned int lenght);
+extern short spinFlipped(struct lattice_position pos, short ***lattice);
+extern void raffleRandomPosition(struct lattice_position *pos);
+extern void transientFloatSpins(short ***lattice, unsigned int size);
+extern void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
+extern void initialize(short ***lattice, unsigned int n);
+extern double totalEnergy(short **lattice);
+// ===========================================================================
 
 int main () {
   // Declaration of variables (and others structures)
