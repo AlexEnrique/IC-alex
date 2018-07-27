@@ -72,7 +72,7 @@ void raffleRandomPosition(struct lattice_position *pos) {
 }
 
 short spinFlipped(struct lattice_position pos, short ***lattice) {
-  if ((dE = deltaE(pos, *lattice)) < 0) { // T == 0
+  if (deltaE(pos, *lattice) < 0) { // T == 0
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }
@@ -91,8 +91,8 @@ double deltaE(struct lattice_position pos, short **lattice) {
   neigbSum += lattice[pos.x][(pos.y+1)%n];
 
   // J = 1 (def.)
-  // printf("%d\n", ( 2 * (lattice[pos.x][pos.y]) * neigbSum ));
-  return ( 2 * (lattice[pos.x][pos.y]) * neigbSum );
+  printf("%d\n", ( 2 * (lattice[pos.x][pos.y]) * neigbSum ));
+  return ( -2 * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
 double sum(double *arr, unsigned int lenght) {
