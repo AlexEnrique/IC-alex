@@ -1,8 +1,3 @@
-/*
-  Functions to implement:
-    totalEnergy(&lattice)
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -11,13 +6,13 @@
 
 double dE; // move this global variable to an extern file or remove it
 
-struct lattice_position {
+typedef struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
    * conditions can be performed. This is why just *
    * using unsigned integer variables for x and y  */
   unsigned int x;
   unsigned int y;
-}
+};
 
 // All functions ===============================================
 // Functions of the 'random_generator' header
@@ -26,14 +21,13 @@ void startRNG();
 void stopRNG();
 
 // Functions of this header =====================================
-double totalEnergy(short **lattice)
-double deltaE(lattice_position pos, short **lattice);
+double deltaE(struct lattice_position pos, short **lattice);
 double sum(double *arr, unsigned int lenght);
-short spinFlipped(lattice_position pos, short ***lattice);
-void raffleRandomPosition(lattice_position *pos, unsigned int n);
+short spinFlipped(struct lattice_position pos, short ***lattice);
+void raffleRandomPosition(struct lattice_position *pos, unsigned int n);
 void transientFloatSpins(short ***lattice, unsigned int size);
-void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice);
-void spinFlipped(lattice_position pos, short ***lattice);
+void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
+void spinFlipped(struct lattice_position pos, short ***lattice);
 void initialize(short ***lattice, unsigned int n);
 double totalEnergy(short **lattice, unsigned int n);
 // ===============================================================
@@ -64,7 +58,7 @@ void transientFloatSpins(short ***lattice, unsigned int size) {
   }
 }
 
-void raffleRandomPosition(lattice_position *pos, unsigned int n) {
+void raffleRandomPosition(struct lattice_position *pos, unsigned int n) {
   /* the range of 'x' and 'y' in lattice[x][y] is  *
    * from 0 (inclusive) to n (exclusive), like the *
    * gsl_rng_uniform_int() function above.         */
@@ -72,8 +66,8 @@ void raffleRandomPosition(lattice_position *pos, unsigned int n) {
   pos->y = gsl_rng_uniform_int(rng, n);
 }
 
-short spinFlipped(lattice_position pos, short ***lattice) {
-  if (dE = deltaE(pos, *lattice) < 0) {
+short spinFlipped(struct lattice_position pos, short ***lattice) {
+  if (dE = deltaE(pos, *lattice) < 0) { // T == 0
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }
@@ -82,7 +76,7 @@ short spinFlipped(lattice_position pos, short ***lattice) {
   return 0;
 }
 
-double deltaE(lattice_position pos, short **lattice) {
+double deltaE(struct lattice_position pos, short **lattice) {
   short neigbSum = 0;
   /* periodic boundary conditions:                              *
    * ((pos.x+1 == n) % n) == 0 and ((pos.x-1 == -1) % n) == n-1 */
@@ -104,7 +98,7 @@ double sum(double *arr, unsigned int lenght) {
 }
 
 // typedef struct type_observables defined in "type_observables.h"
-void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice) {
+void adjustObservables(struct type_observables &obsrv, struct lattice_position posFlip, short **lattice) {
   obsrv->energy += dE;
 }
 

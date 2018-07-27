@@ -5,4 +5,4 @@ typedef struct type_observables {
   // double sigmaZiZj;
   // double sigmaXi;
   // double sigmaXiXj;
-}
+};

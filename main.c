@@ -21,13 +21,13 @@
 #define MIN_TEMPERATURE 0.5
 #define N_LATTICE_TEST 3
 
-struct lattice_position {
+typedef struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
    * conditions can be performed. This is why just *
    * using unsigned integer variables for x and y  */
   unsigned int x;
   unsigned int y;
-}
+};
 
 // All functions ============================================================
 // Functions of the 'random_generator' header
@@ -35,14 +35,13 @@ unsigned long int rdtsc();
 void startRNG();
 void stopRNG();
 // Functions of the "function.h" header =====================================
-double totalEnergy(short **lattice)
-double deltaE(lattice_position pos, short **lattice);
+double deltaE(struct lattice_position pos, short **lattice);
 double sum(double *arr, unsigned int lenght);
-short spinFlipped(lattice_position pos, short ***lattice);
-void raffleRandomPosition(lattice_position *pos, unsigned int n);
+short spinFlipped(struct lattice_position pos, short ***lattice);
+void raffleRandomPosition(struct lattice_position *pos, unsigned int n);
 void transientFloatSpins(short ***lattice, unsigned int size);
-void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice);
-void spinFlipped(lattice_position pos, short ***lattice);
+void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
+void spinFlipped(struct lattice_position pos, short ***lattice);
 void initialize(short ***lattice, unsigned int n);
 double totalEnergy(short **lattice, unsigned int n);
 // ===========================================================================
@@ -76,7 +75,7 @@ int main () {
   // file to store the calculations
   FILE *filePtr = fopen(FILE_NAME, "w");
 
-  while (T > (minT - dT)) {
+  while (T > minT) {
     // Float the spins for disregarding transient states
     transientFloatSpins(&lattice);
 
@@ -90,7 +89,7 @@ int main () {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) {
           adjustObservables(obsrv, pos, lattice);
-          // Energy += 2 * deltaE(lattice, pos);
+          // To add others observables after
         }
       }
       // Store the new observables
@@ -102,7 +101,8 @@ int main () {
 
     // output data
     // print T, <E>
-    fprintf(filePtr, "%lf\t%lf\n", T, avgE);
+    // fprintf(filePtr, "%lf\t%lf\n", T, avgE);
+    printf("%lf\t%lf\n", T, avgE); // To test
   }
 
   fclose(filePtr);
