@@ -35,6 +35,7 @@ void transientFloatSpins(short ***lattice, unsigned int size);
 void adjustObservables(type_observables &obsrv, lattice_position posFlip, short **lattice);
 void spinFlipped(lattice_position pos, short ***lattice);
 void initialize(short ***lattice, unsigned int n);
+double totalEnergy(short **lattice, unsigned int n);
 // ===============================================================
 
 void initialize(short ***lattice, unsigned int n) {
@@ -55,7 +56,7 @@ void transientFloatSpins(short ***lattice, unsigned int size) {
   lattice_position pos;
 
   // change this SMTHG to something meaningful
-  for (unsigned int i = 0; i < SMTHG; i++) {
+  for (unsigned int i = 0; i < 1000; i++) {
     for (unsigned int j = 0; j < size; j++) {
       raffleRandomPosition(&pos);
       spinFlipped(pos, &lattice);
@@ -72,7 +73,7 @@ void raffleRandomPosition(lattice_position *pos, unsigned int n) {
 }
 
 short spinFlipped(lattice_position pos, short ***lattice) {
-  if (dE = deltaE(pos, *lattice) > 0) {
+  if (dE = deltaE(pos, *lattice) < 0) {
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }
@@ -91,7 +92,7 @@ double deltaE(lattice_position pos, short **lattice) {
   neigbSum += lattice[pos.x][(pos.y+1)%n];
 
   // J = 1 (def.)
-  return ( (-2) * (lattice[pos.x][pos.y]) * neigbSum );
+  return ( 2 * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
 double sum(double *arr, unsigned int lenght) {
@@ -107,6 +108,14 @@ void adjustObservables(type_observables &obsrv, lattice_position posFlip, short 
   obsrv->energy += dE;
 }
 
-double totalEnergy(short **lattice) {
-  
+double totalEnergy(short **lattice, unsigned int n) {
+  // (B == 0): H = -J \sum_{i,j} s_i^j s_{i+1}^j + s_i^j s_i^{j+1}
+  double H = 0;
+  for (unsigned int i = 0; i < n; i++) { // Nx == Ny == n
+    for (unsigned int j = 0; j < n; j++) {
+      H += (-1) * lattice[i][j](lattice[i+1][j] + lattice[i][j+1]);
+    }
+  }
+
+  return H;
 }
