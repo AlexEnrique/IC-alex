@@ -91,8 +91,8 @@ double deltaE(struct lattice_position pos, short **lattice) {
   neigbSum += lattice[pos.x][(pos.y+1)%n];
 
   // J = 1 (def.)
-  printf("%d\n", ( 2 * (lattice[pos.x][pos.y]) * neigbSum ));
-  return ( -2 * (lattice[pos.x][pos.y]) * neigbSum );
+  // printf("%lf\n", ( (double)2 * (lattice[pos.x][pos.y]) * neigbSum ));
+  return ( (double)2 * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
 double sum(double *arr, unsigned int lenght) {
