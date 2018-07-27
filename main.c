@@ -20,6 +20,7 @@
 #define DELTA_T 0.1
 #define MIN_TEMPERATURE 0.5
 #define N_LATTICE_TEST 3
+#define FILE_NAME "teste.dat"
 
 typedef struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
@@ -29,30 +30,29 @@ typedef struct lattice_position {
   unsigned int y;
 };
 
-// All functions ============================================================
-// Functions of the 'random_generator' header
-unsigned long int rdtsc();
-void startRNG();
-void stopRNG();
-// Functions of the "function.h" header =====================================
-double deltaE(struct lattice_position pos, short **lattice);
-double sum(double *arr, unsigned int lenght);
-short spinFlipped(struct lattice_position pos, short ***lattice);
-void raffleRandomPosition(struct lattice_position *pos, unsigned int n);
-void transientFloatSpins(short ***lattice, unsigned int size);
-void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
-void spinFlipped(struct lattice_position pos, short ***lattice);
-void initialize(short ***lattice, unsigned int n);
-double totalEnergy(short **lattice, unsigned int n);
-// ===========================================================================
+// // All functions ============================================================
+// // Functions of the 'random_generator' header
+// unsigned long int rdtsc();
+// void startRNG();
+// void stopRNG();
+// // Functions of the "function.h" header =====================================
+// double deltaE(struct lattice_position pos, short **lattice);
+// double sum(double *arr, unsigned int lenght);
+// short spinFlipped(struct lattice_position pos, short ***lattice);
+// void raffleRandomPosition(struct lattice_position *pos);
+// void transientFloatSpins(short ***lattice, unsigned int size);
+// void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
+// void initialize(short ***lattice, unsigned int n);
+// double totalEnergy(short **lattice);
+// // ===========================================================================
 
 int main () {
   // Declaration of variables (and others structures)
   unsigned int n, size; // número de sítios em cada dimensão
   short **lattice;
   double T, dT, minT, *E, avgE;
-  lattice_position pos;
-  type_observables obsrv;
+  struct lattice_position pos;
+  struct type_observables obsrv;
 
   // Initialization of variables (and others)
   n = N_LATTICE_TEST;
@@ -77,7 +77,7 @@ int main () {
 
   while (T > minT) {
     // Float the spins for disregarding transient states
-    transientFloatSpins(&lattice);
+    transientFloatSpins(&lattice, size);
 
     // Observables tests for the program
     obsrv.energy = totalEnergy(lattice);

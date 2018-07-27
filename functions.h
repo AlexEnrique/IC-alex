@@ -4,7 +4,9 @@
 #include "random_generator.h"
 #include "type_observables.h"
 
-double dE; // move this global variable to an extern file or remove it
+// move this global variable to an extern file or remove it
+double dE;
+unsigned int n = 3; // 3 para teste
 
 typedef struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
@@ -16,20 +18,19 @@ typedef struct lattice_position {
 
 // All functions ===============================================
 // Functions of the 'random_generator' header
-unsigned long int rdtsc();
-void startRNG();
-void stopRNG();
+// unsigned long int rdtsc();
+// void startRNG();
+// void stopRNG();
 
 // Functions of this header =====================================
 double deltaE(struct lattice_position pos, short **lattice);
 double sum(double *arr, unsigned int lenght);
 short spinFlipped(struct lattice_position pos, short ***lattice);
-void raffleRandomPosition(struct lattice_position *pos, unsigned int n);
+void raffleRandomPosition(struct lattice_position *pos);
 void transientFloatSpins(short ***lattice, unsigned int size);
 void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
-void spinFlipped(struct lattice_position pos, short ***lattice);
 void initialize(short ***lattice, unsigned int n);
-double totalEnergy(short **lattice, unsigned int n);
+double totalEnergy(short **lattice);
 // ===============================================================
 
 void initialize(short ***lattice, unsigned int n) {
@@ -47,7 +48,7 @@ void initialize(short ***lattice, unsigned int n) {
 }
 
 void transientFloatSpins(short ***lattice, unsigned int size) {
-  lattice_position pos;
+  struct lattice_position pos;
 
   // change this SMTHG to something meaningful
   for (unsigned int i = 0; i < 1000; i++) {
@@ -58,7 +59,7 @@ void transientFloatSpins(short ***lattice, unsigned int size) {
   }
 }
 
-void raffleRandomPosition(struct lattice_position *pos, unsigned int n) {
+void raffleRandomPosition(struct lattice_position *pos) {
   /* the range of 'x' and 'y' in lattice[x][y] is  *
    * from 0 (inclusive) to n (exclusive), like the *
    * gsl_rng_uniform_int() function above.         */
@@ -98,16 +99,16 @@ double sum(double *arr, unsigned int lenght) {
 }
 
 // typedef struct type_observables defined in "type_observables.h"
-void adjustObservables(struct type_observables &obsrv, struct lattice_position posFlip, short **lattice) {
+void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice) {
   obsrv->energy += dE;
 }
 
-double totalEnergy(short **lattice, unsigned int n) {
+double totalEnergy(short **lattice) {
   // (B == 0): H = -J \sum_{i,j} s_i^j s_{i+1}^j + s_i^j s_i^{j+1}
   double H = 0;
   for (unsigned int i = 0; i < n; i++) { // Nx == Ny == n
     for (unsigned int j = 0; j < n; j++) {
-      H += (-1) * lattice[i][j](lattice[i+1][j] + lattice[i][j+1]);
+      H += (-1) * lattice[i][j] * (lattice[i+1][j] + lattice[i][j+1]);
     }
   }
 
