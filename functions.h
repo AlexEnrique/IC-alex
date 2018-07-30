@@ -74,6 +74,7 @@ void raffleRandomPosition(struct lattice_position *pos) {
 
 short spinFlipped(struct lattice_position pos, long int ***lattice) {
   if ((dE = deltaE(pos, *lattice)) < 0 || gsl_rng_uniform(rng) < exp(-beta*dE)) {
+  // if ((dE = deltaE(pos, *lattice)) < 0) {
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }

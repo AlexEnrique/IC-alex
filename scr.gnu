@@ -1,4 +1,4 @@
-set format x "%.1f"
+set format x "%.2e"
 set format y "%.3e"
 unset key
 

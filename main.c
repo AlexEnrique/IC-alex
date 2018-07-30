@@ -47,6 +47,8 @@ int main () {
   for (unsigned int i = 0; i < n; i++) {
     lattice[i] = malloc(n * sizeof(**lattice));
   }
+
+  printf("Critical Temperature: %.2e\n", (2*J / (KB*log(1+sqrt(2)))));
   // Create and initialize lattice with random spins variables
   startRNG();
   initialize(&lattice, n);
@@ -78,8 +80,8 @@ int main () {
 
     // output data
     // print T, <E>
-    fprintf(filePtr, "%.1lf\t%.3e\n", T, avgE);
-    printf("T = %.2lf\n", T); // To test
+    fprintf(filePtr, "%.1e\t%.3e\n", T, avgE);
+    printf("T = %.2e\n", T); // To test
     // printf("%.1lf\t%.3e\n", T, avgE); // To test
     // printLattice(lattice, n);
   }
