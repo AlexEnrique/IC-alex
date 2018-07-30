@@ -55,8 +55,8 @@ void initialize(long int ***lattice, unsigned int n) {
 void transientFloatSpins(long int ***lattice, unsigned int size) {
   struct lattice_position pos;
 
-  // change this 1000 to something meaningful
-  for (unsigned int i = 0; i < 1000; i++) {
+  // change this 15 to something meaningful
+  for (unsigned int i = 0; i < MAX_TRANSIENT; i++) {
     for (unsigned int j = 0; j < size; j++) {
       raffleRandomPosition(&pos);
       spinFlipped(pos, lattice);
