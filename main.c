@@ -14,19 +14,21 @@
 #include "functions.h"
 
 #include "extern_defs_var.h"
-// Move those defs to a separated file later
+
+// #ifndef THOSE_CONSTANTS
 // #define MAX_MC_LOOPS 1000
 // #define MAX_METR_LOOPS 1000 // change to size of the lattice (at the final version)?
 // #define INITIAL_TEMPERATURE 5.0
 // #define DELTA_T 0.1
 // #define MIN_TEMPERATURE 0.5
-// #define N_LATTICE_TEST 3
+// #define N_LATTICE_TEST 4
 // #define FILE_NAME "teste.dat"
+// #endif
 
 int main () {
   // Declaration of variables (and others structures)
-  unsigned int n, size; // número de sítios em cada dimensão
-  short **lattice;
+  unsigned int n, size; // 'n' is the number of sites in each direction and size == Nx*Nx == n^2
+  long int **lattice;
   double T, dT, minT, *E, avgE;
   struct lattice_position pos;
   struct type_observables obsrv;
@@ -37,6 +39,7 @@ int main () {
   dT = DELTA_T;
   T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do while abaixo
   minT = MIN_TEMPERATURE;
+  beta = 1/(KB*T);
 
   E = malloc(MAX_MC_LOOPS * sizeof(*E));
 
@@ -44,7 +47,6 @@ int main () {
   for (unsigned int i = 0; i < n; i++) {
     lattice[i] = malloc(n * sizeof(**lattice));
   }
-
   // Create and initialize lattice with random spins variables
   startRNG();
   initialize(&lattice, n);
@@ -64,9 +66,8 @@ int main () {
       for (unsigned int j = 0; j < MAX_METR_LOOPS; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) { // Not flipping
-          printf("flip\n"); // test
           adjustObservables(&obsrv, pos, lattice);
-          // To add others observables after
+          // Others observables after
         }
       }
       // Store the new observables
@@ -77,13 +78,20 @@ int main () {
 
     // output data
     // print T, <E>
-    // fprintf(filePtr, "%lf\t%lf\n", T, avgE);
-    // printf("%lf\t%lf\n", T, avgE); // To test
-    printLattice(lattice, n);
+    fprintf(filePtr, "%.1lf\t%.3e\n", T, avgE);
+    printf("T = %.2lf\n", T); // To test
+    // printf("%.1lf\t%.3e\n", T, avgE); // To test
+    // printLattice(lattice, n);
   }
 
+  free(E);
+  for (unsigned int i = 0; i < n; i++) {
+    free(lattice[i]);
+  }
+  free(lattice);
   fclose(filePtr);
   stopRNG();
+  system("gnuplot < scr.gnu --persist");
 
   return 0;
 }

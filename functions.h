@@ -9,7 +9,7 @@
 #define FUNCTIONS
 
 // move this global variable to an extern file or remove it
-double dE;
+double dE, beta;
 unsigned int n = N_LATTICE_TEST;
 
 struct lattice_position {
@@ -27,17 +27,18 @@ void startRNG();
 void stopRNG();
 
 // Functions of this header =====================================
-double deltaE(struct lattice_position pos, short **lattice);
+double deltaE(struct lattice_position pos, long int **lattice);
 double sum(double *arr, unsigned int lenght);
-short spinFlipped(struct lattice_position pos, short ***lattice);
+short spinFlipped(struct lattice_position pos, long int ***lattice);
 void raffleRandomPosition(struct lattice_position *pos);
-void transientFloatSpins(short ***lattice, unsigned int size);
-void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice);
-void initialize(short ***lattice, unsigned int n);
-double totalEnergy(short **lattice);
+void transientFloatSpins(long int ***lattice, unsigned int size);
+void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, long int **lattice);
+void initialize(long int ***lattice, unsigned int n);
+void printLattice(long int **lattice, unsigned int n);
+double totalEnergy(long int **lattice);
 // ===============================================================
 
-void initialize(short ***lattice, unsigned int n) {
+void initialize(long int ***lattice, unsigned int n) {
   // Equaly distributed random initialization
   unsigned int randomNo;
 
@@ -51,10 +52,10 @@ void initialize(short ***lattice, unsigned int n) {
 
 }
 
-void transientFloatSpins(short ***lattice, unsigned int size) {
+void transientFloatSpins(long int ***lattice, unsigned int size) {
   struct lattice_position pos;
 
-  // change this SMTHG to something meaningful
+  // change this 1000 to something meaningful
   for (unsigned int i = 0; i < 1000; i++) {
     for (unsigned int j = 0; j < size; j++) {
       raffleRandomPosition(&pos);
@@ -71,8 +72,8 @@ void raffleRandomPosition(struct lattice_position *pos) {
   pos->y = gsl_rng_uniform_int(rng, n);
 }
 
-short spinFlipped(struct lattice_position pos, short ***lattice) {
-  if (deltaE(pos, *lattice) < 0) { // T == 0
+short spinFlipped(struct lattice_position pos, long int ***lattice) {
+  if ((dE = deltaE(pos, *lattice)) < 0 || gsl_rng_uniform(rng) < exp(-beta*dE)) {
     (*lattice)[pos.x][pos.y] *= -1;
     return 1;
   }
@@ -81,7 +82,7 @@ short spinFlipped(struct lattice_position pos, short ***lattice) {
   return 0;
 }
 
-double deltaE(struct lattice_position pos, short **lattice) {
+double deltaE(struct lattice_position pos, long int **lattice) {
   short neigbSum = 0;
   /* periodic boundary conditions:                              *
    * ((pos.x+1 == n) % n) == 0 and ((pos.x-1 == -1) % n) == n-1 */
@@ -90,9 +91,7 @@ double deltaE(struct lattice_position pos, short **lattice) {
   neigbSum += lattice[pos.x][(pos.y-1)%n];
   neigbSum += lattice[pos.x][(pos.y+1)%n];
 
-  // J = 1 (def.)
-  // printf("%lf\n", ( (double)2 * (lattice[pos.x][pos.y]) * neigbSum ));
-  return ( (double)2 * (lattice[pos.x][pos.y]) * neigbSum );
+  return ( (double)(-2*J) * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
 double sum(double *arr, unsigned int lenght) {
@@ -104,23 +103,23 @@ double sum(double *arr, unsigned int lenght) {
 }
 
 // typedef struct type_observables defined in "type_observables.h"
-void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, short **lattice) {
+void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, long int **lattice) {
   obsrv->energy += dE;
 }
 
-double totalEnergy(short **lattice) {
+double totalEnergy(long int **lattice) {
   // (B == 0): H = -J \sum_{i,j} s_i^j s_{i+1}^j + s_i^j s_i^{j+1}
   double H = 0;
   for (unsigned int i = 0; i < n; i++) { // Nx == Ny == n
     for (unsigned int j = 0; j < n; j++) {
-      H += (-1) * lattice[i][j] * (lattice[(i+1)%n][j] + lattice[i][(j+1)%n]);
+      H += (-J) * lattice[i][j] * (lattice[(i+1)%n][j] + lattice[i][(j+1)%n]);
     }
   }
 
   return H;
 }
 
-void printLattice(short **lattice, unsigned int n) {
+void printLattice(long int **lattice, unsigned int n) {
   for (unsigned int i = 0; i < n; i++) {
     for (unsigned int j = 0; j < n; j++) {
       char c = (lattice[i][j] > 0) ? '+' : '-';
