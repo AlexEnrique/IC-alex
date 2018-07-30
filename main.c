@@ -14,7 +14,6 @@
 #include "functions.h"
 
 #include "extern_defs_var.h"
-
 // #ifndef THOSE_CONSTANTS
 // #define MAX_MC_LOOPS 1000
 // #define MAX_METR_LOOPS 1000 // change to size of the lattice (at the final version)?
