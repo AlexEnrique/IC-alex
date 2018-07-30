@@ -66,7 +66,7 @@ int main () {
       for (unsigned int j = 0; j < MAX_METR_LOOPS; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) { // Not flipping
-          adjustObservables(&obsrv, pos, lattice);
+          adjustObservables(&obsrv);
           // Others observables after
         }
       }
