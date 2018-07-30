@@ -20,23 +20,23 @@ struct lattice_position {
   unsigned int y;
 };
 
-// All functions ===============================================
+// All functions ======================================================
 // Functions of the 'random_generator' header
 unsigned long int rdtsc();
 void startRNG();
 void stopRNG();
 
-// Functions of this header =====================================
+// Functions of this header ============================================
 double deltaE(struct lattice_position pos, long int **lattice);
 double sum(double *arr, unsigned int lenght);
 short spinFlipped(struct lattice_position pos, long int ***lattice);
 void raffleRandomPosition(struct lattice_position *pos);
 void transientFloatSpins(long int ***lattice, unsigned int size);
-void adjustObservables(struct type_observables *obsrv, struct lattice_position posFlip, long int **lattice);
+void adjustObservables(struct type_observables *obsrv);
 void initialize(long int ***lattice, unsigned int n);
 void printLattice(long int **lattice, unsigned int n);
 double totalEnergy(long int **lattice);
-// ===============================================================
+// ======================================================================
 
 void initialize(long int ***lattice, unsigned int n) {
   // Equaly distributed random initialization
