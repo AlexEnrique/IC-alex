@@ -11,10 +11,6 @@
 unsigned long int seed;
 gsl_rng *rng;
 
-// unsigned long int rdtsc();
-// void startRNG();
-// void stopRNG();
-
 // Provides a (random) seed for the rng
 unsigned long int rdtsc() {
    unsigned int lo, hi;
