@@ -58,9 +58,8 @@ int main () {
   while ((T -= dT) > minT) {
     // Float the spins for disregarding transient states
     transientFloatSpins(&lattice, size);
+    obsrv.energy = totalEnergy(lattice);
 
-    // Observables tests for the program
-    obsrv.energy = totalEnergy(lattice); // Error here
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
       // Metropolis (Fluctuations) loops
