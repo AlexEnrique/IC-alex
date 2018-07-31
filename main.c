@@ -64,7 +64,7 @@ int main () {
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
       // Metropolis (Fluctuations) loops
-      for (unsigned int j = 0; j < MAX_METR_LOOPS; j++) {
+      for (unsigned int j = 0; j < size; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) { // Not flipping
           adjustObservables(&obsrv);
