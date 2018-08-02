@@ -10,7 +10,6 @@
 
 // move this global variable to an extern file or remove it
 double dE, beta;
-unsigned int n = N_LATTICE_TEST;
 
 struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
@@ -28,15 +27,16 @@ void stopRNG();
 
 // Functions of this header ============================================
 double deltaE(struct lattice_position pos, long int **lattice);
+double totalMagnetization(long int **lattice);
+double totalEnergy(long int **lattice);
 double sum(double *arr, unsigned int lenght);
 short spinFlipped(struct lattice_position pos, long int ***lattice);
 void raffleRandomPosition(struct lattice_position *pos);
 void transientFloatSpins(long int ***lattice, unsigned int size);
-void adjustObservables(struct type_observables *obsrv);
+void adjustObservables(struct type_observables *obsrv, int spin);
 void initialize(long int ***lattice, unsigned int n);
 void printLattice(long int **lattice, unsigned int n);
 void showCriticalTemperature(const short op) ;
-double totalEnergy(long int **lattice);
 // ======================================================================
 
 void initialize(long int ***lattice, unsigned int n) {
@@ -94,20 +94,6 @@ double deltaE(struct lattice_position pos, long int **lattice) {
   return ( (double)(2*J) * -lattice[pos.x][pos.y] * neigbSum );
 }
 
-double sum(double *arr, unsigned int lenght) {
-  double S = 0;
-  for (unsigned int i = 0; i < lenght; i++) {
-    S += *(arr + i);
-  }
-
-  return S;
-}
-
-// struct type_observables defined in "type_observables.h"
-void adjustObservables(struct type_observables *obsrv) {
-  obsrv->energy += dE;
-}
-
 double totalEnergy(long int **lattice) {
   // (B == 0): H = -J \sum_{i,j} s_i^j s_{i+1}^j + s_i^j s_i^{j+1}
   double H = 0;
@@ -117,6 +103,30 @@ double totalEnergy(long int **lattice) {
     }
   }
   return H;
+}
+
+double totalMagnetization(long int **lattice) {
+  double m = 0;
+  for (unsigned int i = 0; i < n; i++)
+    for (unsigned int j = 0; j < n; j++)
+      m += lattice[i][j];
+
+  return m;
+}
+
+// struct type_observables defined in "type_observables.h"
+void adjustObservables(struct type_observables *obsrv, int spin) {
+  obsrv->energy += dE;
+  obsrv->magnetization += 2 * spin;
+}
+
+double sum(double *arr, unsigned int lenght) {
+  double S = 0;
+  for (unsigned int i = 0; i < lenght; i++) {
+    S += *(arr + i);
+  }
+
+  return S;
 }
 
 void printLattice(long int **lattice, unsigned int n) {
