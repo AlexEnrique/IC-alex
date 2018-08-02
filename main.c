@@ -16,6 +16,7 @@
 // structure of all observables
 #include "observables.h"
 
+unsigned int n;
 // functions used
 #include "functions.h"
 
@@ -24,9 +25,9 @@
 
 int main () {
   // Declaration of variables (and others structures)
-  unsigned int n, size; // 'n' is the number of sites in each direction and size == Nx*Nx == n^2
+  unsigned int size; // 'n' is the number of sites in each direction and size == Nx*Nx == n^2
   long int **lattice;
-  double T, dT, minT, *E, avgE;
+  double T, dT, minT, *E, *M, avgE, avgM;
   struct lattice_position pos;
   struct type_observables obsrv;
 
@@ -38,6 +39,7 @@ int main () {
   minT = MIN_TEMPERATURE;
 
   E = malloc(MAX_MC_LOOPS * sizeof(*E));
+  M = malloc(MAX_MC_LOOPS * sizeof(*M));
 
   lattice = malloc(n * sizeof(**lattice));
   for (unsigned int i = 0; i < n; i++) {
@@ -58,29 +60,33 @@ int main () {
     // Float the spins for disregarding transient states
     transientFloatSpins(&lattice, size);
     obsrv.energy = -totalEnergy(lattice);
+    obsrv.magnetization = totalMagnetization(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
       // Metropolis (Fluctuations) loops
       for (unsigned int j = 0; j < size; j++) {
         raffleRandomPosition(&pos);
-        if (spinFlipped(pos, &lattice)) { // Not flipping
-          adjustObservables(&obsrv);
-          // Others observables after
-        }
+        if ( spinFlipped(pos, &lattice) )
+          adjustObservables(&obsrv, lattice[pos.x][pos.y]);
+
       }
 
       // Store the new observables
       E[i] = obsrv.energy;
+      M[i] = obsrv.magnetization;
     }
 
     avgE = sum(E, MAX_MC_LOOPS)/MAX_MC_LOOPS;
     avgE /= size; // avgE per site
 
+    avgM = sum(M, MAX_MC_LOOPS)/MAX_MC_LOOPS;
+    avgM /= size;
+
     // output data
-    // printing T, <E>
-    fprintf(filePtr, "%.1lf\t%.3lf\n", T, avgE);
-    printf("%.2lf\t%.3lf\n", T, avgE); // To se where the program is
+    // printing T, <E>, <M>
+    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, avgE, avgM);
+    printf("%.2lf\t%.3lf\t%.3lf\n", T, avgE, avgM); // To se where the program is
   }
 
   // clossing/cleaning files, pointers, etc.
@@ -89,6 +95,7 @@ int main () {
   }
   free(lattice);
   free(E);
+  free(M);
   fclose(filePtr);
   stopRNG();
 
