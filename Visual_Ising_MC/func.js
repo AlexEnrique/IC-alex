@@ -20,6 +20,7 @@ function fluctuateLattice() {
 
   let dE = deltaE(pos);
   if (dE < 0 || random() < exp(-beta*dE)) {
+    E += dE;
     flip(pos);
     return 1;
   }
@@ -48,14 +49,21 @@ function deltaE(pos) {
    * the right result for periodic boundary conditions.
    * this is why it's write (pos.x -1 + cols) % cols below.
    */
-  var sum = lattice[(pos.x - 1 + cols) % cols][pos.y];
-  sum += lattice[(pos.x + 1) % cols][pos.y];
-  sum += lattice[pos.x][(pos.y - 1 + rows) % rows];
-  sum += lattice[pos.x][(pos.y + 1) % rows];
+  var neigbSum  = lattice[(pos.x - 1 + cols) % cols][pos.y];
+      neigbSum += lattice[(pos.x + 1) % cols][pos.y];
+      neigbSum += lattice[pos.x][(pos.y - 1 + rows) % rows];
+      neigbSum += lattice[pos.x][(pos.y + 1) % rows];
 
-  return ( 2 * J * (-lattice[pos.x][pos.y]) * sum);
+  return ( 2 * J * (-lattice[pos.x][pos.y]) * neigbSum);
 }
 
-function totalEnergy() {
+function totalEnergy(cols, rows) {
+  var H = 0;
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      H += (-J) * lattice[i][j] * ( lattice[(i+1)%cols][j] + lattice[i][(j+1)%rows] );
+    }
+  }
 
+  return H;
 }

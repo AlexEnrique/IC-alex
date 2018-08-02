@@ -9,20 +9,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+
+// random number generator file
 #include "random_generator.h"
-#include "type_observables.h"
+
+// structure of all observables
+#include "observables.h"
+
+// functions used
 #include "functions.h"
 
+// Consants declared with #define used in the program
 #include "extern_defs_var.h"
-// #ifndef THOSE_CONSTANTS
-// #define MAX_MC_LOOPS 1000
-// #define MAX_METR_LOOPS 1000 // change to size of the lattice (at the final version)?
-// #define INITIAL_TEMPERATURE 5.0
-// #define DELTA_T 0.1
-// #define MIN_TEMPERATURE 0.5
-// #define N_LATTICE_TEST 4
-// #define FILE_NAME "teste.dat"
-// #endif
 
 int main () {
   // Declaration of variables (and others structures)
@@ -46,7 +44,6 @@ int main () {
     lattice[i] = malloc(n * sizeof(**lattice));
   }
 
-  printf("Critical Temperature: %.2e\n", (2*J / (KB*log(1+sqrt(2)))));
   // Create and initialize lattice with random spins variables
   startRNG();
   initialize(&lattice, n);
@@ -54,8 +51,10 @@ int main () {
   // file to store the calculations
   FILE *filePtr = fopen(FILE_NAME, "w");
 
+  showCriticalTemperature(0); // 0 == no, 1 == yes
   while ((T -= dT) > minT-dT) {
-    beta = 1/(KB*T);
+    beta = 1/(KB * T); //k == 1
+
     // Float the spins for disregarding transient states
     transientFloatSpins(&lattice, size);
     obsrv.energy = -totalEnergy(lattice);
@@ -66,39 +65,36 @@ int main () {
       for (unsigned int j = 0; j < size; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) { // Not flipping
-          // adjustObservables(&obsrv);
-          obsrv.energy = -totalEnergy(lattice);
+          adjustObservables(&obsrv);
           // Others observables after
-          // printf("E: %lf\n", obsrv.energy);
         }
       }
+
       // Store the new observables
       E[i] = obsrv.energy;
     }
 
-    // for (int i = 0; i < MAX_MC_LOOPS; i++) {
-    //   printf("E[%d]: %lf\n", i, E[i]);
-    // }
     avgE = sum(E, MAX_MC_LOOPS)/MAX_MC_LOOPS;
     avgE /= size; // avgE per site
 
     // output data
-    // print T, <E>
+    // printing T, <E>
     fprintf(filePtr, "%.1lf\t%.3lf\n", T, avgE);
-    // printf("T = %.2e\n", T); // To test
-    printf("%.2lf\t%.3lf\n", T, avgE); // To test
-    // printLattice(lattice, n);
-    // return 0;
+    printf("%.2lf\t%.3lf\n", T, avgE); // To se where the program is
   }
 
-  fclose(filePtr);
-  free(E);
+  // clossing/cleaning files, pointers, etc.
   for (unsigned int i = 0; i < n; i++) {
     free(lattice[i]);
   }
   free(lattice);
+  free(E);
+  fclose(filePtr);
   stopRNG();
+
+  // plot data
   // system("gnuplot < scr.gnu --persist");
 
+  printf("\a");
   return 0;
 }

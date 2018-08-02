@@ -1,17 +1,19 @@
 let cols;
 let rows;
-let resolution = 10;
+let resolution = 5;
 
 var countFlip = 0;
 var total = 0;
 
 // Physical variables
-let J = 1.0;
-let k = 1.38064852e-23;
+let J = -1.0;
+let k = 1;
+// let k = 1.38064852e-23;
 let phaseTransitionTemp = 2*J/(k*Math.log(1+Math.sqrt(2))); // Kelvin
-let temperature = phaseTransitionTemp/2; // Kelvin
+let temperature = 1.2;
 let beta = 1/(k*temperature);
 var lattice;
+var E;
 
 function setup() {
   // console.log(phaseTransitionTemp);
@@ -30,6 +32,7 @@ function setup() {
 
   background(0);
   initializePicture();
+  E = totalEnergy(cols, rows);
 }
 
 function initializePicture() {
@@ -51,19 +54,14 @@ function initializePicture() {
 
 function draw() {
   var fliped = fluctuateLattice();
-  total++;
-  if (fliped) {
-    countFlip++;
-    if (lattice[pos.x][pos.y] == 1)
-      fill(255);
-    else
-      fill(0);
+  if (lattice[pos.x][pos.y] == 1)
+    fill(255);
+  else
+    fill(0);
 
-    noStroke();
-    rect(pos.x * resolution, pos.y * resolution, resolution, resolution);
-  }
-
-  // console.log("F:"+(countFlip/total));
+  noStroke();
+  rect(pos.x * resolution, pos.y * resolution, resolution, resolution);
+  // console.log("E:"+E/(cols*rows));
 
 
   // noLoop();
