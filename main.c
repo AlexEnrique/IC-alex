@@ -84,9 +84,9 @@ int main () {
     avgM /= size;
 
     // output data
-    // printing T, <E>, <M>
-    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, avgE, avgM);
-    printf("%.2lf\t%.3lf\t%.3lf\n", T, avgE, avgM); // To se where the program is
+    // printing T, <E>, |<M>|
+    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, avgE, fabs(avgM));
+    printf("%.2lf\t%.3lf\t%.3lf\n", T, avgE, fabs(avgM)); // To se where the program is
   }
 
   // clossing/cleaning files, pointers, etc.
