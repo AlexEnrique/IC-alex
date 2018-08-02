@@ -1,17 +1,15 @@
 #include <gsl/gsl_rng.h>
 
+#ifndef RANDOM_GENERATOR
+#define RANDOM_GENERATOR
 /* "gsl_rng *rng" creates an instance 'rng' of random number  *
  * of the type gsl_rng_ranlux389 (initialized in the          *
  * startRNG() function). It's an implementation of the        *
  * algorithm developed by Luscher, but modified to generate   *
  * number with a lower correlation than the original one      *
  * original algorithm.                                        */
-const unsigned long int seed;
-const gsl_rng *rng;
-
-unsigned long int rdtsc();
-void startRNG();
-void stopRNG();
+unsigned long int seed;
+gsl_rng *rng;
 
 // Provides a (random) seed for the rng
 unsigned long int rdtsc() {
@@ -27,5 +25,7 @@ void startRNG() {
 }
 
 void stopRNG() {
-  gsl_rng_free(r);
+  gsl_rng_free(rng);
 }
+
+#endif
