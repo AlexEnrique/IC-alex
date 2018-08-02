@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "random_generator.h"
-#include "type_observables.h"
+#include "observables.h"
 #include "extern_defs_var.h"
 
 #ifndef FUNCTIONS
@@ -14,7 +14,7 @@ unsigned int n = N_LATTICE_TEST;
 
 struct lattice_position {
   /* Using modular arithmetics, periodic boundary  *
-   * conditions can be performed. This is why just *
+   * conditions can be performed. This is why I am *
    * using unsigned integer variables for x and y  */
   unsigned int x;
   unsigned int y;
@@ -35,11 +35,11 @@ void transientFloatSpins(long int ***lattice, unsigned int size);
 void adjustObservables(struct type_observables *obsrv);
 void initialize(long int ***lattice, unsigned int n);
 void printLattice(long int **lattice, unsigned int n);
+void showCriticalTemperature(const short op) ;
 double totalEnergy(long int **lattice);
 // ======================================================================
 
 void initialize(long int ***lattice, unsigned int n) {
-  // Equaly distributed random initialization
   unsigned int randomNo;
 
   for (unsigned int x = 0; x < n; x++) {
@@ -55,7 +55,7 @@ void initialize(long int ***lattice, unsigned int n) {
 void transientFloatSpins(long int ***lattice, unsigned int size) {
   struct lattice_position pos;
 
-  // change this 15 to something meaningful
+  // change this MAX_TRANSIENT to something meaningful
   for (unsigned int i = 0; i < MAX_TRANSIENT; i++) {
     for (unsigned int j = 0; j < size; j++) {
       raffleRandomPosition(&pos);
@@ -74,39 +74,36 @@ void raffleRandomPosition(struct lattice_position *pos) {
 
 short spinFlipped(struct lattice_position pos, long int ***lattice) {
   if ((dE = deltaE(pos, *lattice)) < 0 || gsl_rng_uniform(rng) < exp(-beta*dE)) {
-  // if ((dE = deltaE(pos, *lattice)) < 0) {
-    (*lattice)[pos.x][pos.y] *= -1;
+    (*lattice)[pos.x][pos.y] *= -1; // flip at pos.x, pos.y
     return 1;
   }
 
-  // else (if not flipped):
+  // (if not flipped):
   return 0;
 }
 
 double deltaE(struct lattice_position pos, long int **lattice) {
   short neigbSum = 0;
   /* periodic boundary conditions:                              *
-   * ((pos.x+1 == n) % n) == 0 and ((pos.x-1 == -1) % n) == n-1 */
-  neigbSum += lattice[(pos.x-1)%n][pos.y];
-  neigbSum += lattice[(pos.x+1)%n][pos.y];
-  neigbSum += lattice[pos.x][(pos.y-1)%n];
-  neigbSum += lattice[pos.x][(pos.y+1)%n];
+   * ((pos.x+1 == n) % n) == 0 and ((pos.x-1 == -1) % n) == -1  */
+  neigbSum += lattice[(pos.x - 1 + n) % n][pos.y];
+  neigbSum += lattice[(pos.x + 1) % n][pos.y];
+  neigbSum += lattice[pos.x][(pos.y - 1 + n) % n];
+  neigbSum += lattice[pos.x][(pos.y + 1) % n];
 
-  // printf("dE: %lf\n", (double)(-2*J) * (lattice[pos.x][pos.y]) * neigbSum); // Ok aqui
-  return ( (double)(-2*J) * (lattice[pos.x][pos.y]) * neigbSum );
+  return ( (double)(2*J) * -lattice[pos.x][pos.y] * neigbSum );
 }
 
 double sum(double *arr, unsigned int lenght) {
   double S = 0;
   for (unsigned int i = 0; i < lenght; i++) {
     S += *(arr + i);
-    // printf("S: %lf\n", arr[i]);
   }
 
   return S;
 }
 
-// typedef struct type_observables defined in "type_observables.h"
+// struct type_observables defined in "type_observables.h"
 void adjustObservables(struct type_observables *obsrv) {
   obsrv->energy += dE;
 }
@@ -119,7 +116,6 @@ double totalEnergy(long int **lattice) {
       H += (-J) * lattice[i][j] * (lattice[(i+1)%n][j] + lattice[i][(j+1)%n]);
     }
   }
-  // printf("H: %lf\n", H); // Ok aqui
   return H;
 }
 
@@ -132,6 +128,11 @@ void printLattice(long int **lattice, unsigned int n) {
     printf("\n");
   }
   printf("\n");
+}
+
+void showCriticalTemperature(const short op) {
+  if (op)
+    printf("Critical Temperature: %.2e\n", (2*J / (KB*log(1+sqrt(2)))));
 }
 
 #endif
