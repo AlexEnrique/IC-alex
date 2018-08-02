@@ -38,7 +38,6 @@ int main () {
   dT = DELTA_T;
   T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do while abaixo
   minT = MIN_TEMPERATURE;
-  beta = 1/(KB*T);
 
   E = malloc(MAX_MC_LOOPS * sizeof(*E));
 
@@ -55,10 +54,11 @@ int main () {
   // file to store the calculations
   FILE *filePtr = fopen(FILE_NAME, "w");
 
-  while ((T -= dT) > minT) {
+  while ((T -= dT) > minT-dT) {
+    beta = 1/(KB*T);
     // Float the spins for disregarding transient states
     transientFloatSpins(&lattice, size);
-    obsrv.energy = totalEnergy(lattice);
+    obsrv.energy = -totalEnergy(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
@@ -66,32 +66,39 @@ int main () {
       for (unsigned int j = 0; j < size; j++) {
         raffleRandomPosition(&pos);
         if (spinFlipped(pos, &lattice)) { // Not flipping
-          adjustObservables(&obsrv);
+          // adjustObservables(&obsrv);
+          obsrv.energy = -totalEnergy(lattice);
           // Others observables after
+          // printf("E: %lf\n", obsrv.energy);
         }
       }
       // Store the new observables
       E[i] = obsrv.energy;
     }
+
+    // for (int i = 0; i < MAX_MC_LOOPS; i++) {
+    //   printf("E[%d]: %lf\n", i, E[i]);
+    // }
     avgE = sum(E, MAX_MC_LOOPS)/MAX_MC_LOOPS;
     avgE /= size; // avgE per site
 
     // output data
     // print T, <E>
-    fprintf(filePtr, "%.1e\t%.3e\n", T, avgE);
-    printf("T = %.2e\n", T); // To test
-    // printf("%.1lf\t%.3e\n", T, avgE); // To test
+    fprintf(filePtr, "%.1lf\t%.3lf\n", T, avgE);
+    // printf("T = %.2e\n", T); // To test
+    printf("%.2lf\t%.3lf\n", T, avgE); // To test
     // printLattice(lattice, n);
+    // return 0;
   }
 
+  fclose(filePtr);
   free(E);
   for (unsigned int i = 0; i < n; i++) {
     free(lattice[i]);
   }
   free(lattice);
-  fclose(filePtr);
   stopRNG();
-  system("gnuplot < scr.gnu --persist");
+  // system("gnuplot < scr.gnu --persist");
 
   return 0;
 }

@@ -92,13 +92,16 @@ double deltaE(struct lattice_position pos, long int **lattice) {
   neigbSum += lattice[pos.x][(pos.y-1)%n];
   neigbSum += lattice[pos.x][(pos.y+1)%n];
 
+  // printf("dE: %lf\n", (double)(-2*J) * (lattice[pos.x][pos.y]) * neigbSum); // Ok aqui
   return ( (double)(-2*J) * (lattice[pos.x][pos.y]) * neigbSum );
 }
 
 double sum(double *arr, unsigned int lenght) {
   double S = 0;
-  for (unsigned int i = 0; i < lenght; i++)
-    S += arr[i];
+  for (unsigned int i = 0; i < lenght; i++) {
+    S += *(arr + i);
+    // printf("S: %lf\n", arr[i]);
+  }
 
   return S;
 }
@@ -116,7 +119,7 @@ double totalEnergy(long int **lattice) {
       H += (-J) * lattice[i][j] * (lattice[(i+1)%n][j] + lattice[i][(j+1)%n]);
     }
   }
-
+  // printf("H: %lf\n", H); // Ok aqui
   return H;
 }
 
