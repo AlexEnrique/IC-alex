@@ -4,4 +4,4 @@
 
 
 # Energy per spin
-![Alt text](https://github.com/AlexEnrique/IC-ising-sim/blob/master/TesteEnergy.pdf)
+![Alt text](https://github.com/AlexEnrique/IC-ising-sim/blob/master/Testes%20Monte%20Carlo/energy.png?raw=true)
