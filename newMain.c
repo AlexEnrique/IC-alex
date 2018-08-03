@@ -18,13 +18,13 @@ double dE;
 #include "extern_defs_var.h"
 
 
-typedef struct latticePosition {
+typedef struct LatticePosition {
   unsigned int x;
   unsigned int y;
-} latticePosition;
+} LatticePosition;
 
 typedef struct SpinsLattice {
-  latticePosition pos;
+  LatticePosition pos;
   unsigned int Nx;
   unsigned int Ny;
   unsigned int size;
@@ -76,7 +76,7 @@ void choseRandomPosition(SpinsLattice this) {
   this.pos.y = gsl_rng_uniform_int(rng, this.Ny);
 }
 
-double deltaE(latticePosition pos, long int **lattice) {
+double deltaE(LatticePosition pos, long int **lattice) {
   short neigbSum = 0;
   /* periodic boundary conditions:                              *
    * ((pos.x+1 == n) % n) == 0 and ((pos.x-1 == -1) % n) == -1  */
