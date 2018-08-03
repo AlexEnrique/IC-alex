@@ -30,6 +30,7 @@ typedef struct SpinsLattice {
   unsigned int size;
   long int **spin;
 
+  // Functions pointers
   void (*memSpinsAlloc)();
   void (*initializeSpinsRandom)();
   void (*floatSpins)();
