@@ -107,53 +107,60 @@ SpinsLattice createLattice(int Nx, int Ny) {
 }
 
 int main () {
-  SpinsLattice lattice = createLattice(7, 3);
+  unsigned int n;
+  double T, dT, minT;
+  SpinsLattice lattice = createLattice(n, n);
+  Observables observables = createObservables();
 
-  startRNG();
+  // Initialization of variables
+  T = INITIAL_TEMPERATURE;
+  dT = DELTA_T;
+  minT = MIN_TEMPERATURE;
+
+  // Initialization of structures
+  startRNG(); // Starts the random number generator
   lattice.memSpinsAlloc();
   lattice.initializeSpinsRandom();
+
+  // File to output the data calculated
   FILE *filePtr = fopen(FILE_NAME, "w");
 
-  printf("\n\n");
-  for (int y = 0; y < lattice.Ny; y++) {
-    for (int x = 0; x < lattice.Nx; x++) {
-      printf("%d ", lattice.spin[x][y]);
-    }
-    printf("\n");
-  }
-
+  showCriticalTemperature(0); // 0 == no, 1 == yes
   while ((T -=dT) > minT) {
     beta = 1/T; // k == 1
 
+    // Float the spins for disregarding transient states
     lattice.floatSpins();
     observables.energy = -totalEnergy(lattice); // It will not work. To att totalEnergy()
     observables.magnetization = totalMagnetization(lattice);
 
+    // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
+      // Metropolis loop
       for (unsigned int j = 0; j < lattice.size; j++) {
         lattice.choseRandomPosition();
-
-        if (lattice.flipSpin())
+        if ( lattice.flipSpin() )
           observables.adjust();
-      } // end 'j' for
+      } // end Metropolis loop
 
-
+      // Store the new observables
       observables.E[i] = observables.energy;
       observables.M[i] = observables.magnetization;
-    } // end 'i' for
+    } // end monte carlo loop
 
     observables.average(); // calcula avgE e avgM (e outros)
-    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, observables.avgE, fabs(observables.avgM));
-    printf("%.2lf\t%.3lf\t%.3lf\n", T, observables.avgE, fabs(observables.avgM)); // To se where the program is
 
+    // output data
+    // printing T, <E>, |<M>|
+    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, observables.avgE, fabs(observables.avgM));
+    printf("%.2lf\n", T); // this print is just to see in which Temperature is the program
   } // end while
 
-
-
-  stopRNG();
-  for (int x = 0; x < lattice.Nx; x++)
-    free(lattice.spin[x]);
-  free(lattice.spin);
+  // the following commands desalocates the memory used
+  stopRNG(); // stops random number generator
+  lattice.freeMemory();
+  observables.freeMemory();
   fclose(filePtr);
+
   return 0;
 }
