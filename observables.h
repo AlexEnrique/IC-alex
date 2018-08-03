@@ -4,7 +4,7 @@
 struct type_observables {
   double energy;
   double magnetization;
-  // double sigmaZi;
+  double Szi;
   // double sigmaZiZj;
   // double sigmaXi;
   // double sigmaXiXj;

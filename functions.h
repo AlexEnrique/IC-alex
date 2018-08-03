@@ -118,6 +118,8 @@ double totalMagnetization(long int **lattice) {
 void adjustObservables(struct type_observables *obsrv, int spin) {
   obsrv->energy += dE;
   obsrv->magnetization += 2 * spin;
+  // if (i == pos.x)
+  //   obsrv->SziQuant += 2 * spin;
 }
 
 double sum(double *arr, unsigned int lenght) {
