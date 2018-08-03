@@ -63,8 +63,8 @@ void initializeSpinsRandom(SpinsLattice this) {
 }
 
 void floatSpins(SpinsLattice this) {
-  for (unsigned int i = 0; i < this.Nx; i++) {
-    for (unsigned int j = 0; j < this.Ny; j++) {
+  for (unsigned int i = 0; i < MAX_TRANSIENT; i++) {
+    for (unsigned int j = 0; j < this.size; j++) {
       this.choseRandomPosition();
       this.flipSpin();
     }
@@ -112,6 +112,7 @@ int main () {
   startRNG();
   lattice.memSpinsAlloc();
   lattice.initializeSpinsRandom();
+  FILE *filePtr = fopen(FILE_NAME, "w");
 
   printf("\n\n");
   for (int y = 0; y < lattice.Ny; y++) {
@@ -121,11 +122,38 @@ int main () {
     printf("\n");
   }
 
-  for (int x = 0; x < lattice.Nx; x++)
-    free(lattice.spin[x]);
-  free(lattice.spin);
+  while ((T -=dT) > minT) {
+    beta = 1/T; // k == 1
+
+    lattice.floatSpins();
+    observables.energy = -totalEnergy(lattice); // It will not work. To att totalEnergy()
+    observables.magnetization = totalMagnetization(lattice);
+
+    for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
+      for (unsigned int j = 0; j < lattice.size; j++) {
+        lattice.choseRandomPosition();
+
+        if (lattice.flipSpin())
+          observables.adjust();
+      } // end 'j' for
+
+
+      observables.E[i] = observables.energy;
+      observables.M[i] = observables.magnetization;
+    } // end 'i' for
+
+    observables.average(); // calcula avgE e avgM (e outros)
+    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, observables.avgE, fabs(observables.avgM));
+    printf("%.2lf\t%.3lf\t%.3lf\n", T, observables.avgE, fabs(observables.avgM)); // To se where the program is
+
+  } // end while
+
 
 
   stopRNG();
+  for (int x = 0; x < lattice.Nx; x++)
+    free(lattice.spin[x]);
+  free(lattice.spin);
+  fclose(filePtr);
   return 0;
 }
