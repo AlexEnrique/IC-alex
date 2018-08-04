@@ -20,7 +20,7 @@
 // #define MIN_TEMPERATURE 1e-7 * (-2*J / (KB*log(1+sqrt(2))))
 // #define DELTA_T (INITIAL_TEMPERATURE - MIN_TEMPERATURE)/1e4
 
-#define FILE_NAME "obsrv2.dat"
+#define FILE_NAME "teste2.dat"
 #define BUFF_SIZE 70
 
 #endif

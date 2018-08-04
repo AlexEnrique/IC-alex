@@ -7,108 +7,22 @@
 #include "random_generator.h"
 
 // structure of all observables
-#include "observables.h"
+// #include "observables.h"
 
-unsigned int n;
+// those variables are used in the function header
 double dE;
+double beta; // beta == 1/(kT)
 // functions used
 #include "new_functions.h"
 
 // Consants declared with #define used in the program
 #include "extern_defs_var.h"
 
-
-typedef struct LatticePosition {
-  unsigned int x;
-  unsigned int y;
-} LatticePosition;
-
-typedef struct SpinsLattice {
-  LatticePosition pos;
-  unsigned int Nx;
-  unsigned int Ny;
-  unsigned int size;
-  long int **spin;
-
-  // Functions pointers
-  void (*memSpinsAlloc)();
-  void (*initializeSpinsRandom)();
-  void (*floatSpins)();
-  void (*choseRandomPosition)();
-  short (*flipSpin)();
-} SpinsLattice;
-
-// void memSpinsAlloc(SpinsLattice this);
-// void initializeSpinsRandom(SpinsLattice this);
-// void floatSpins(SpinsLattice this);
-// void choseRandomPosition(spinFlipped this);
-// short flipSpin(spinFlipped this);
-
-void memSpinsAlloc(SpinsLattice this) {
-  this.spin = malloc(this.Nx * sizeof(**this.spin));
-  for (unsigned int x = 0; x < this.Nx; x++)
-    this.spin[x] = malloc(this.Ny * sizeof(**this.spin));
-}
-
-void initializeSpinsRandom(SpinsLattice this) {
-  unsigned int randomNo;
-
-  for (unsigned int x = 0; x < this.Nx; x++) {
-    for (unsigned int y = 0; y < this.Ny; y++) {
-      // generates an unsigned integer in the interval [0:10)
-      printf("x, y: %d, %d\n", x, y);
-      randomNo = gsl_rng_uniform_int(rng, 10);
-      this.spin[x][y] = ( (randomNo < 5) ? -1 : 1 );
-    }
-  }
-}
-
-void floatSpins(SpinsLattice this) {
-  for (unsigned int i = 0; i < MAX_TRANSIENT; i++) {
-    for (unsigned int j = 0; j < this.size; j++) {
-      this.choseRandomPosition();
-      this.flipSpin();
-    }
-  }
-}
-
-void choseRandomPosition(SpinsLattice this) {
-  this.pos.x = gsl_rng_uniform_int(rng, this.Nx);
-  this.pos.y = gsl_rng_uniform_int(rng, this.Ny);
-}
-
-double deltaE(LatticePosition pos, long int **lattice) {
-  short neigbSum = 0;
-  /* periodic boundary conditions:                              *
-   * ((pos.x+1 == n) % n) == 0 and ((pos.x-1 == -1) % n) == -1  */
-  neigbSum += lattice[(pos.x - 1 + n) % n][pos.y];
-  neigbSum += lattice[(pos.x + 1) % n][pos.y];
-  neigbSum += lattice[pos.x][(pos.y - 1 + n) % n];
-  neigbSum += lattice[pos.x][(pos.y + 1) % n];
-
-  return ( (double)(2*J) * -lattice[pos.x][pos.y] * neigbSum );
-}
-
-short flipSpin(SpinsLattice this) {
-  dE = deltaE(this.pos, this.spin);
-}
-
-SpinsLattice createLattice(int Nx, int Ny) {
-  SpinsLattice _lattice;
-  _lattice.Nx = Nx;
-  _lattice.Ny = Ny;
-  _lattice.size = Nx*Ny;
-  _lattice.memSpinsAlloc = memSpinsAlloc;
-  _lattice.initializeSpinsRandom = initializeSpinsRandom;
-  _lattice.floatSpins = floatSpins;
-  _lattice.choseRandomPosition = choseRandomPosition;
-  _lattice.flipSpin = flipSpin;
-
-  return _lattice;
-}
+#include "lattice_structure.h"
+#include "observables_structure.h"
 
 int main () {
-  unsigned int n;
+  unsigned int n = N_LATTICE_TEST;
   double T, dT, minT;
   SpinsLattice lattice = createLattice(n, n);
   Observables observables = createObservables();
@@ -120,8 +34,9 @@ int main () {
 
   // Initialization of structures
   startRNG(); // Starts the random number generator
-  lattice.memSpinsAlloc();
-  lattice.initializeSpinsRandom();
+  lattice.memSpinsAlloc(&lattice);
+  lattice.initSpinsRandomly(&lattice);
+  // lattice.printLattice(lattice);
 
   // File to output the data calculated
   FILE *filePtr = fopen(FILE_NAME, "w");
@@ -131,17 +46,20 @@ int main () {
     beta = 1/T; // k == 1
 
     // Float the spins for disregarding transient states
-    lattice.floatSpins();
-    observables.energy = -totalEnergy(lattice); // It will not work. To att totalEnergy()
+    lattice.floatSpins(&lattice);
+
+    // Calculate the observables before the MC loop (for some temperature)
+    observables.energy = totalEnergy(lattice);
     observables.magnetization = totalMagnetization(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
       // Metropolis loop
       for (unsigned int j = 0; j < lattice.size; j++) {
-        lattice.choseRandomPosition();
-        if ( lattice.flipSpin() )
-          observables.adjust();
+        lattice.choseRandomPosition(lattice);
+        if ( lattice.flipSpin(&lattice) )
+          observables.adjust(lattice, &observables);
+          // printf("%lf\t%lf\n", observables.energy, observables.magnetization);
       } // end Metropolis loop
 
       // Store the new observables
@@ -149,7 +67,7 @@ int main () {
       observables.M[i] = observables.magnetization;
     } // end monte carlo loop
 
-    observables.average(); // calcula avgE e avgM (e outros)
+    observables.average(lattice, &observables); // calcula avgE e avgM (e outros)
 
     // output data
     // printing T, <E>, |<M>|
@@ -159,9 +77,10 @@ int main () {
 
   // the following commands desalocates the memory used
   stopRNG(); // stops random number generator
-  lattice.freeMemory();
-  observables.freeMemory();
+  lattice.freeMemory(&lattice);
+  observables.freeMemory(&observables);
   fclose(filePtr);
+  printf("\a");
 
   return 0;
 }
