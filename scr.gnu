@@ -5,12 +5,14 @@ set ytics auto
 #unset key
 set key left top
 
-plot 'teste.dat' w linespoint
-#plot 'teste2.dat' w l title 'numSpins = 4'
-#replot 'teste3.dat' w l title 'numSpins = 9'
-#replot 'teste4.dat' w l title 'numSpins = 16'
-#replot 'teste5.dat' w l title 'numSpins = 25'
-#replot 'teste6.dat' w l title 'numSpins = 36'
+plot 'obsrv2.dat' using 1:2 smooth bezier title 'N=4'
+replot 'obsrv3.dat' using 1:2 smooth bezier title 'N=8'
+replot 'obsrv4.dat' using 1:2 smooth bezier title 'N=16'
+replot 'obsrv5.dat' using 1:2 smooth bezier title 'N=25'
+replot 'obsrv8.dat' using 1:2 smooth bezier title 'N=64'
+replot 'obsrv12.dat' using 1:2 smooth bezier title 'N=144'
+replot 'obsrv15.dat' using 1:2 smooth bezier title 'N=225'
+
 
 #set term eps
 #set output 'teste.eps'
