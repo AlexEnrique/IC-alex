@@ -41,7 +41,7 @@ int main () {
   // File to output the data calculated
   FILE *filePtr = fopen(FILE_NAME, "w");
 
-  // Formating output file 
+  // Formating output file
   fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
   fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj\n");
   fprintf(filePtr, "# ---  ------  -----  -----  ------\n");
@@ -67,8 +67,6 @@ int main () {
         lattice.choseRandomPosition(&lattice);
         if ( lattice.flipSpin(&lattice) )
           observables.adjust(lattice, &observables);
-          // lattice.printLattice(lattice);
-          // printf("%lf\t%lf\n", observables.energy, observables.magnetization);
       } // end Metropolis loop
 
       // Store the new observables
