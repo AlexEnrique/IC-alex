@@ -30,8 +30,8 @@ int main () {
   Observables observables = createObservables();
 
   // Initialization of variables
-  T = INITIAL_TEMPERATURE;
   dT = DELTA_T;
+  T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do 'while' abaixo
   minT = MIN_TEMPERATURE;
 
   // Initialization of structures
@@ -42,8 +42,8 @@ int main () {
   FILE *filePtr = fopen(FILE_NAME, "w");
 
   fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
-  fprintf(filePtr, "# T(K)  <E>  |<M>|  Szi  SziSzj\n");
-  fprintf(filePtr, "# ---  ------  -----  -----  -----\n");
+  fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj\n");
+  fprintf(filePtr, "# ---  ------  -----  -----  ------\n");
 
   showCriticalTemperature(0); // 0 == no, 1 == yes
   while ((T -=dT) > minT) {

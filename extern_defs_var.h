@@ -3,10 +3,10 @@
 #ifndef EXT_VAR
 #define EXT_VAR
 
-#define MAX_MC_LOOPS 10000
+#define MAX_MC_LOOPS 2000
 #define MAX_METR_LOOPS 100 // change to size of the lattice (at the final version)?
 #define MAX_TRANSIENT 1000
-#define N_LATTICE_TEST 15
+#define N_LATTICE_TEST 100
 
 // #define J (double) TC/2 * KB*log(1+sqrt(2)
 // #define KB 1.38064852E-23 // SI unsits
