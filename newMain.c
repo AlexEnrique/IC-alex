@@ -41,6 +41,7 @@ int main () {
   // File to output the data calculated
   FILE *filePtr = fopen(FILE_NAME, "w");
 
+  // Formating output file 
   fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
   fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj\n");
   fprintf(filePtr, "# ---  ------  -----  -----  ------\n");
