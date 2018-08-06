@@ -43,8 +43,8 @@ int main () {
 
   // Formating output file
   fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
-  fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj  Cor(Szi,Szj)\n");
-  fprintf(filePtr, "# ---  ------  -----  -----  ------  -----------\n");
+  fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj  Corr(Szi,Szj)\n");
+  fprintf(filePtr, "# ---  ------  -----  -----  ------  -------------\n");
 
   showCriticalTemperature(0); // 0 == no, 1 == yes
   while ((T -=dT) > minT) {
