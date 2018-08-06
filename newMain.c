@@ -24,6 +24,8 @@ double beta; // beta == 1/(kT)
 int main () {
   unsigned int n = N_LATTICE_TEST;
   double T, dT, minT;
+
+  startRNG(); // Starts the random number generator
   SpinsLattice lattice = createLattice(n, n);
   Observables observables = createObservables();
 
@@ -33,13 +35,15 @@ int main () {
   minT = MIN_TEMPERATURE;
 
   // Initialization of structures
-  startRNG(); // Starts the random number generator
   lattice.memSpinsAlloc(&lattice);
   lattice.initSpinsRandomly(&lattice);
-  // lattice.printLattice(lattice);
 
   // File to output the data calculated
   FILE *filePtr = fopen(FILE_NAME, "w");
+
+  fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
+  fprintf(filePtr, "# T(K)  <E>  |<M>|  Szi  SziSzj\n");
+  fprintf(filePtr, "# ---  ------  -----  -----  -----\n");
 
   showCriticalTemperature(0); // 0 == no, 1 == yes
   while ((T -=dT) > minT) {
@@ -51,28 +55,35 @@ int main () {
     // Calculate the observables before the MC loop (for some temperature)
     observables.energy = totalEnergy(lattice);
     observables.magnetization = totalMagnetization(lattice);
+    observables.Szi = totalSzi(lattice);
+    observables.Szj = totalSzj(lattice);
+    observables.SziSzj = totalSziSzj(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
       // Metropolis loop
       for (unsigned int j = 0; j < lattice.size; j++) {
-        lattice.choseRandomPosition(lattice);
+        lattice.choseRandomPosition(&lattice);
         if ( lattice.flipSpin(&lattice) )
           observables.adjust(lattice, &observables);
+          // lattice.printLattice(lattice);
           // printf("%lf\t%lf\n", observables.energy, observables.magnetization);
       } // end Metropolis loop
 
       // Store the new observables
       observables.E[i] = observables.energy;
       observables.M[i] = observables.magnetization;
+      observables.SziArr[i] = observables.Szi;
+      observables.SzjArr[i] = observables.Szj;
+      observables.SziSzjArr[i] = observables.SziSzj;
     } // end monte carlo loop
 
     observables.average(lattice, &observables); // calcula avgE e avgM (e outros)
 
     // output data
     // printing T, <E>, |<M>|
-    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, observables.avgE, fabs(observables.avgM));
-    printf("%.2lf\n", T); // this print is just to see in which Temperature is the program
+    fprintf(filePtr, " %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj);
+    printf(" %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
   } // end while
 
   // the following commands desalocates the memory used

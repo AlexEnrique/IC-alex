@@ -6,6 +6,7 @@ typedef struct Observables {
   double energy;
   double magnetization;
   double Szi;
+  double Szj;
   double SziSzj;
   double Sxi;
   double SxiSxj;
@@ -14,6 +15,7 @@ typedef struct Observables {
   double *E;
   double *M;
   double *SziArr;
+  double *SzjArr;
   double *SziSzjArr;
   double *SxiArr;
   double *SxiSxjArr;
@@ -22,6 +24,7 @@ typedef struct Observables {
   double avgE;
   double avgM;
   double avgSzi;
+  double avgSzj;
   double avgSziSzj;
   double avgSxi;
   double avgSxiSxj;

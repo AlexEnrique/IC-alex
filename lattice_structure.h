@@ -4,6 +4,8 @@
 typedef struct LatticePosition {
   unsigned int x;
   unsigned int y;
+  unsigned int i;
+  unsigned int j;
 } LatticePosition;
 
 typedef struct SpinsLattice {
@@ -11,6 +13,8 @@ typedef struct SpinsLattice {
   unsigned int Nx;
   unsigned int Ny;
   unsigned int size;
+  short i;
+  short j;
   long int **spin;
 
   // Functions pointers
