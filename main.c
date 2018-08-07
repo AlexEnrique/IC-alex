@@ -1,107 +1,96 @@
-/* Main code file
- * Comments will be added after...
- * Created by: Alex Enrique Crispim
- * Date: ...
- * Adaptaded from: ...
- * e-mail: ecsp.alex@gmail.com
- */
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
 
 // random number generator file
 #include "random_generator.h"
 
 // structure of all observables
-#include "observables.h"
+// #include "observables.h"
 
-unsigned int n;
+// those variables are used in the function header
+double dE;
+double beta; // beta == 1/(kT)
 // functions used
 #include "functions.h"
 
 // Consants declared with #define used in the program
 #include "extern_defs_var.h"
 
-int main () {
-  // Declaration of variables (and others structures)
-  unsigned int size; // 'n' is the number of sites in each direction and size == Nx*Nx == n^2
-  long int **lattice;
-  double T, dT, minT, *E, *M, avgE, avgM;
-  struct lattice_position pos;
-  struct type_observables obsrv;
+#include "lattice_structure.h"
+#include "observables_structure.h"
 
-  // Initialization of variables (and others)
-  n = N_LATTICE_TEST;
-  size = pow(n,2);
+int main () {
+  unsigned int n = N_LATTICE_TEST;
+  double T, dT, minT;
+
+  startRNG(); // Starts the random number generator
+  SpinsLattice lattice = createLattice(n, n);
+  Observables observables = createObservables();
+
+  // Initialization of variables
   dT = DELTA_T;
-  T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do while abaixo
+  T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do 'while' abaixo
   minT = MIN_TEMPERATURE;
 
-  E = malloc(MAX_MC_LOOPS * sizeof(*E));
-  M = malloc(MAX_MC_LOOPS * sizeof(*M));
+  // Initialization of structures
+  lattice.memSpinsAlloc(&lattice);
+  lattice.initSpinsRandomly(&lattice);
 
-  lattice = malloc(n * sizeof(**lattice));
-  for (unsigned int i = 0; i < n; i++) {
-    lattice[i] = malloc(n * sizeof(**lattice));
-  }
-
-  // Create and initialize lattice with random spins variables
-  startRNG();
-  initialize(&lattice, n);
-
-  // file to store the calculations
+  // File to output the data calculated
   FILE *filePtr = fopen(FILE_NAME, "w");
 
+  // Formating output file
+  fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
+  fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj  Corr(Szi,Szj)\n");
+  fprintf(filePtr, "# ---  ------  -----  -----  ------  -------------\n");
+
   showCriticalTemperature(0); // 0 == no, 1 == yes
-  while ((T -= dT) > minT-dT) {
-    beta = 1/(KB * T); //k == 1
+  while ((T -=dT) > minT) {
+    beta = 1/T; // k == 1
 
     // Float the spins for disregarding transient states
-    transientFloatSpins(&lattice, size);
-    obsrv.energy = -totalEnergy(lattice);
-    obsrv.magnetization = totalMagnetization(lattice);
+    lattice.floatSpins(&lattice);
+
+    // Calculate the observables before the MC loop (for some temperature)
+    observables.energy = totalEnergy(lattice);
+    observables.magnetization = totalMagnetization(lattice);
+    observables.Szi = totalSzi(lattice);
+    observables.Szj = totalSzj(lattice);
+    observables.SziSzj = totalSziSzj(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
-      // Metropolis (Fluctuations) loops
-      for (unsigned int j = 0; j < size; j++) {
-        raffleRandomPosition(&pos);
-        if ( spinFlipped(pos, &lattice) )
-          adjustObservables(&obsrv, lattice[pos.x][pos.y]);
-
-      }
+      // Metropolis loop
+      for (unsigned int j = 0; j < lattice.size; j++) {
+        lattice.choseRandomPosition(&lattice);
+        if ( lattice.flipSpin(&lattice) )
+          observables.adjust(lattice, &observables);
+      } // end Metropolis loop
 
       // Store the new observables
-      E[i] = obsrv.energy;
-      M[i] = obsrv.magnetization;
-    }
+      observables.E[i] = observables.energy;
+      observables.M[i] = observables.magnetization;
+      observables.SziArr[i] = observables.Szi;
+      observables.SzjArr[i] = observables.Szj;
+      observables.SziSzjArr[i] = observables.SziSzj;
+    } // end monte carlo loop
 
-    avgE = sum(E, MAX_MC_LOOPS)/MAX_MC_LOOPS;
-    avgE /= size; // avgE per site
-
-    avgM = sum(M, MAX_MC_LOOPS)/MAX_MC_LOOPS;
-    avgM /= size;
+    observables.average(lattice, &observables); // calcula avgE e avgM (e outros)
 
     // output data
     // printing T, <E>, |<M>|
-    fprintf(filePtr, "%.1lf\t%.3lf\t%.3lf\n", T, avgE, fabs(avgM));
-    printf("%.2lf\t%.3lf\t%.3lf\n", T, avgE, fabs(avgM)); // To se where the program is
-  }
+    fprintf(filePtr, " %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj);
+    printf(" %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
+  } // end while
 
-  // clossing/cleaning files, pointers, etc.
-  for (unsigned int i = 0; i < n; i++) {
-    free(lattice[i]);
-  }
-  free(lattice);
-  free(E);
-  free(M);
+  // the following commands desalocates the memory used
+  stopRNG(); // stops random number generator
+  lattice.freeMemory(&lattice);
+  observables.freeMemory(&observables);
   fclose(filePtr);
-  stopRNG();
-
-  // plot data
-  // system("gnuplot < scr.gnu --persist");
-
   printf("\a");
+
   return 0;
 }
