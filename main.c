@@ -25,6 +25,9 @@ unsigned int jPos;
 int main (int argc, char *argv[]) {
   unsigned int n = MAX_N;
   double T, dT, minT;
+	char *filename = malloc(BUFF_SIZE * sizeof(*filename));
+	char *dir = malloc(BUFF_SIZE * sizeof(*dir));
+	char *command = malloc(BUFF_SIZE * sizeof(*command));
 
 	jPos = atoi(*(argv + 1));
 
@@ -42,7 +45,18 @@ int main (int argc, char *argv[]) {
   lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
-  FILE *filePtr = fopen(FILE_NAME, "w");
+	snprintf(dir, BUFF_SIZE, "FinalObservables");
+	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
+	system(command);
+
+	snprintf(dir, BUFF_SIZE, "FinalObservables/j=%uf", jPos);
+
+	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
+	system(command);
+
+
+	snprintf(filename, BUFF_SIZE, "%s/simulation.dat", dir);
+  FILE *filePtr = fopen(filename, "w");
 
   // Formating output file
   fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);

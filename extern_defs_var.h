@@ -22,6 +22,6 @@
 // #define DELTA_T (INITIAL_TEMPERATURE - MIN_TEMPERATURE)/1e4
 
 #define FILE_NAME "teste2.dat"
-#define BUFF_SIZE 70
+#define BUFF_SIZE 200
 
 #endif
