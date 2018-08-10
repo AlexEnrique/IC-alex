@@ -12,6 +12,7 @@
 // those variables are used in the function header
 double dE;
 double beta; // beta == 1/(kT)
+unsigned int jPos;
 // functions used
 #include "functions.h"
 
@@ -21,9 +22,11 @@ double beta; // beta == 1/(kT)
 #include "lattice_structure.h"
 #include "observables_structure.h"
 
-int main () {
-  unsigned int n = N_LATTICE_TEST;
+int main (int argc, char *argv[]) {
+  unsigned int n = MAX_N;
   double T, dT, minT;
+
+	jPos = atoi(*(argv + 1));
 
   startRNG(); // Starts the random number generator
   SpinsLattice lattice = createLattice(n, n);
@@ -82,7 +85,7 @@ int main () {
     // output data
     // printing T, <E>, |<M>|
     fprintf(filePtr, " %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj);
-    printf(" %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
+    // printf(" %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
   } // end while
 
   // the following commands desalocates the memory used

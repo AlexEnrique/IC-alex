@@ -96,9 +96,9 @@ SpinsLattice createLattice(int Nx, int Ny) {
   _lattice.i = 0;
   _lattice.j = 0;
   _lattice.pos.i = gsl_rng_uniform_int(rng, Nx);
-  _lattice.pos.j = _lattice.pos.i;
-  while (_lattice.pos.j == _lattice.pos.i)
-    _lattice.pos.j = gsl_rng_uniform_int(rng, Nx);
+  _lattice.pos.j = jPos;
+  // while (_lattice.pos.j == _lattice.pos.i)
+  //  _lattice.pos.j = gsl_rng_uniform_int(rng, Nx);
 
   _lattice.memSpinsAlloc = memSpinsAlloc;
   _lattice.initSpinsRandomly = initSpinsRandomly;

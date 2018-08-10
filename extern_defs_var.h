@@ -6,6 +6,7 @@
 #define MAX_MC_LOOPS 2000
 #define MAX_METR_LOOPS 100 // change to size of the lattice (at the final version)?
 #define MAX_TRANSIENT 1000
+#define MAX_N 27
 #define N_LATTICE_TEST 100
 
 // #define J (double) TC/2 * KB*log(1+sqrt(2)
