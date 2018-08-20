@@ -12,7 +12,7 @@
 // those variables are used in the function header
 double dE;
 double beta; // beta == 1/(kT)
-unsigned int jPos;
+unsigned int jPos = 1;
 // functions used
 #include "functions.h"
 
@@ -29,7 +29,7 @@ int main (int argc, char *argv[]) {
 	char *dir = malloc(BUFF_SIZE * sizeof(*dir));
 	char *command = malloc(BUFF_SIZE * sizeof(*command));
 
-	jPos = atoi(*(argv + 1));
+	T = atof(*(argv + 1));
 
   startRNG(); // Starts the random number generator
   SpinsLattice lattice = createLattice(n, n);
@@ -42,7 +42,8 @@ int main (int argc, char *argv[]) {
 
   // Initialization of structures
   lattice.memSpinsAlloc(&lattice);
-  lattice.initSpinsRandomly(&lattice);
+  lattice.initSpinsInline(&lattice);
+  // lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
 	snprintf(dir, BUFF_SIZE, "FinalObservables");
@@ -64,8 +65,9 @@ int main (int argc, char *argv[]) {
   fprintf(filePtr, "# ---  ------  -----  -----  ------  -------------\n");
 
   showCriticalTemperature(0); // 0 == no, 1 == yes
-  while ((T -=dT) > minT) {
-    beta = 1/T; // k == 1
+  beta = 1/T; // k == 1
+  for (int j = 1; j < n; j++) {
+    lattice.pos.j = j;
 
     // Float the spins for disregarding transient states
     lattice.floatSpins(&lattice);
@@ -98,8 +100,8 @@ int main (int argc, char *argv[]) {
 
     // output data
     // printing T, <E>, |<M>|
-    fprintf(filePtr, " %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj);
-    // printf(" %.2lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
+    fprintf(filePtr, " %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSziSzj - observables.avgSzi * observables.avgSzj);
+    // printf(" %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
   } // end while
 
   // the following commands desalocates the memory used
@@ -107,7 +109,7 @@ int main (int argc, char *argv[]) {
   lattice.freeMemory(&lattice);
   observables.freeMemory(&observables);
   fclose(filePtr);
-  printf("\a");
+  // printf("\a");
 
   return 0;
 }

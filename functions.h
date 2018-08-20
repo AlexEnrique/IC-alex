@@ -18,6 +18,7 @@ double totalMagnetization(SpinsLattice lattice);
 double sum(double *arr, unsigned int lenght);
 short flipSpin(SpinsLattice *this);
 void memSpinsAlloc(SpinsLattice *this);
+void initSpinsInline(SpinsLattice *this);
 void initSpinsRandomly(SpinsLattice *this);
 void floatSpins(SpinsLattice *this);
 void choseRandomPosition(SpinsLattice *this);
@@ -33,6 +34,14 @@ void memSpinsAlloc(SpinsLattice *this) {
   this->spin = malloc(this->Nx * sizeof(**this->spin));
   for (unsigned int x = 0; x < this->Nx; x++) {
     this->spin[x] = malloc(this->Ny * sizeof(**this->spin));
+  }
+}
+
+void initSpinsInline(SpinsLattice *this) {
+  for (unsigned int x = 0; x < this->Nx; x++) {
+    for (unsigned int y = 0; y < this->Ny; y++) {
+      this->spin[x][y] = 1;
+    }
   }
 }
 
@@ -95,12 +104,14 @@ SpinsLattice createLattice(int Nx, int Ny) {
   _lattice.size = Nx*Ny;
   _lattice.i = 0;
   _lattice.j = 0;
-  _lattice.pos.i = gsl_rng_uniform_int(rng, Nx);
+  _lattice.pos.i = 0;
   _lattice.pos.j = jPos;
+  // _lattice.pos.i = gsl_rng_uniform_int(rng, Nx);
   // while (_lattice.pos.j == _lattice.pos.i)
   //  _lattice.pos.j = gsl_rng_uniform_int(rng, Nx);
 
   _lattice.memSpinsAlloc = memSpinsAlloc;
+  _lattice.initSpinsInline = initSpinsInline;
   _lattice.initSpinsRandomly = initSpinsRandomly;
   _lattice.floatSpins = floatSpins;
   _lattice.choseRandomPosition = choseRandomPosition;
