@@ -138,7 +138,7 @@ void adjustObservables(SpinsLattice lattice, Observables *this) {
     this->SziSzj += (2 * lattice.spin[lattice.pos.i][lattice.pos.y] * lattice.spin[lattice.pos.j][lattice.pos.y] / lattice.Ny);
 
     this->Sxi += 2 * lattice.spin[lattice.pos.i][lattice.pos.y] * (lattice.spin[lattice.pos.i][(lattice.pos.y + 1) % lattice.Ny] + lattice.spin[lattice.pos.i][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny]);
-    this->SxiSxj += 2 * lattice.spin[lattice.pos.i][lattice.pos.y] * (lattice.spin[lattice.pos.i][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny] + lattice.spin[lattice.pos.i][(lattice.pos.y + 1) % lattice.Ny]);
+    // this->SxiSxj += 2 * lattice.spin[lattice.pos.i][lattice.pos.y] * (lattice.spin[lattice.pos.i][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny] + lattice.spin[lattice.pos.i][(lattice.pos.y + 1) % lattice.Ny]);
   }
 
   else if (lattice.j) {
@@ -146,7 +146,7 @@ void adjustObservables(SpinsLattice lattice, Observables *this) {
     this->SziSzj += (2 * lattice.spin[lattice.pos.j][lattice.pos.y] * lattice.spin[lattice.pos.i][lattice.pos.y] / lattice.Ny);
 
     this->Sxj += 2 * lattice.spin[lattice.pos.j][lattice.pos.y] * (lattice.spin[lattice.pos.j][(lattice.pos.y + 1) % lattice.Ny] + lattice.spin[lattice.pos.j][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny]);
-    this->SxiSxj += 2 * lattice.spin[lattice.pos.j][lattice.pos.y] * (lattice.spin[lattice.pos.j][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny] + lattice.spin[lattice.pos.j][(lattice.pos.y + 1) % lattice.Ny]);
+    // this->SxiSxj += 2 * lattice.spin[lattice.pos.j][lattice.pos.y] * (lattice.spin[lattice.pos.j][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny] + lattice.spin[lattice.pos.j][(lattice.pos.y + 1) % lattice.Ny]);
   }
 
 }
@@ -297,36 +297,26 @@ double totalSxj(SpinsLattice lattice) {
   return Sx;
 }
 
-double totalSxiSxj(SpinsLattice lattice) {
+double totalSxiSxj(SpinsLattice lattice, Observables observables) {
   double A = 1 - 2 * pow(cosh(beta * lattice.Jy), 2);
   double B = 2 * sinh(beta * lattice.Jy);
-  
+
   return (pow(A,2) + (A*B) * (observables.Sxi + observables.Sxj) + pow(B,2) * (observables.Sxi * observables.Sxj));
 }
 
-double totalZ1X2(SpinsLattice lattice) {
-  double betaJy = beta * lattice.Jy;
-  double Z = 0, X = 0, Obsrv = 0;
+double totalZ1X2(SpinsLattice lattice, Observables observables) {
+  double A = 1 / (2 * sinh(beta * lattice.Jy) * cosh(beta * lattice.Jy));
+  double B = (pow(tanh(beta * lattice.Jy), 2) + 1) / (2 * tanh(beta * lattice.Jy));
 
-  for (unsigned int k = 0; k < lattice.Ny; k++) {
-    Z += lattice.spin[(lattice.pos.i+1) % lattice.Nx][k] * lattice.spin[(lattice.pos.i+1) % lattice.Nx][(k + 1) % lattice.Ny];
-    X += lattice.spin[lattice.pos.i][k];
-  }
-
-  Obsrv = ((pow(betaJy, 2) + 1) / (2*betaJy) - X) * Z;
-  Obsrv *= (pow(betaJy, 2) - 1) / (2*betaJy);
-
-  return Obsrv;
+  return ( A * (B * observables.Szi) - observables.Szi*observables.Sxj );
 }
 
-double totalX1Z2(SpinsLattice lattice) {
-  double betaJy = beta * lattice.Jy;
-  double Z = 0, X = 0, Obsrv = 0;
+double totalZ1X2(SpinsLattice lattice, Observables observables) {
+  double A = 1 / (2 * sinh(beta * lattice.Jy) * cosh(beta * lattice.Jy));
+  double B = (pow(tanh(beta * lattice.Jy), 2) + 1) / (2 * tanh(beta * lattice.Jy));
 
-  for (unsigned int k = 0; k < lattice.Ny; k++) {
-    Z += lattice.spin[lattice.pos.i][k] * lattice.spin[lattice.pos.i][(k + 1) % lattice.Ny];
-    X += lattice.spin[(lattice.pos.i+1) % lattice.Nx][k];
-  }
+  return ( A * (B * observables.Szj) - observables.Szj * observables.Sxi );
+}
 
   Obsrv = ((pow(betaJy, 2) + 1) / (2*betaJy) - X) * Z;
   Obsrv *= (pow(betaJy, 2) - 1) / (2*betaJy);

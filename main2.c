@@ -30,7 +30,7 @@ int main (int argc, char *argv[]) {
 	char *command = malloc(BUFF_SIZE * sizeof(*command));
 
 	// T = atof(*(argv + 1));
-  int j = atoi(*(argv + 1));
+  // int j = atoi(*(argv + 1));
 
   startRNG(); // Starts the random number generator
   SpinsLattice lattice = createLattice(n, n);

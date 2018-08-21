@@ -47,16 +47,17 @@ int main (int argc, char *argv[]) {
   // lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
-	snprintf(dir, BUFF_SIZE, "FinalObservables2");
-	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
-	system(command);
+  #define OBSRV_FOLDER "FinalObservables3"
+  snprintf(dir, BUFF_SIZE, "%s", OBSRV_FOLDER);
+  snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
+  system(command);
 
-	snprintf(dir, BUFF_SIZE, "FinalObservables2/j=%uf", j);
+  snprintf(dir, BUFF_SIZE, "%s/j=%uf", OBSRV_FOLDER, j);
 
-	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
-	system(command);
+  snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
+  system(command);
 
-	snprintf(filename, BUFF_SIZE, "%s/simulation.dat", dir);
+  snprintf(filename, BUFF_SIZE, "%s/simulation.dat", dir);
   FILE *filePtr = fopen(filename, "w");
 
   // Formating output file
@@ -68,7 +69,6 @@ int main (int argc, char *argv[]) {
   // for (int j = 1; j < n; j++) {
   while ((T -= dT) > minT) {
     beta = 1/T; // k == 1
-    lattice.pos.j = j;
 
     // Float the spins for disregarding transient states
     lattice.floatSpins(&lattice);
@@ -76,9 +76,11 @@ int main (int argc, char *argv[]) {
     // Calculate the observables before the MC loop (for some temperature)
     observables.energy = totalEnergy(lattice);
     observables.magnetization = totalMagnetization(lattice);
+
     observables.Szi = totalSzi(lattice);
     observables.Szj = totalSzj(lattice);
     observables.SziSzj = totalSziSzj(lattice);
+
     observables.Sxi = totalSxi(lattice);
     observables.Sxj = totalSxj(lattice);
 
@@ -91,10 +93,12 @@ int main (int argc, char *argv[]) {
           observables.adjust(lattice, &observables);
       } // end Metropolis loop
 
-      // Calculated from Sxi and Sxj
-      observables.SxiSxj = totalSxiSxj(lattice);
+      // Observables calculated from Sxi and Sxj
+      observables.SxiSxj = totalSxiSxj(lattice, observables);
+      observables.Z1X2 = totalZ1X2(lattice, observables);
+      observables.X1Z2 = totalX1Z2(lattice, observables);
 
-      // Store the new observables
+      // Store the new values
       observables.E[i] = observables.energy;
       observables.M[i] = observables.magnetization;
 
@@ -105,6 +109,10 @@ int main (int argc, char *argv[]) {
       observables.SxiArr[i] = observables.Sxi;
       observables.SxjArr[i] = observables.Sxj;
       observables.SxiSxjArr[i] = observables.SxiSxj;
+
+      // Só falta implementar estes observáveis.
+      observables.Z1X2Arr[i] = observables.Z1X2;
+      observables.X1Z2Arr[i] = observables.X1Z2;
     } // end monte carlo loop
 
     observables.average(lattice, &observables); // calcula avgE e avgM (e outros)

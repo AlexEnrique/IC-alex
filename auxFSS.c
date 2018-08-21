@@ -23,8 +23,9 @@ int main (int argc) {
     printf("=====================================================\n");
 		printf("Calculating observables for j = %u...\n", j);
 
-    snprintf(call, BUFF_SIZE, "./main.exe %u", j);
-    system(call);
+    // snprintf(call, BUFF_SIZE, "./main.exe %u", j);
+    // system(call);
+		system("./main.exe");
 
 		printf("Done!\n\n");
   }
