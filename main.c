@@ -29,7 +29,8 @@ int main (int argc, char *argv[]) {
 	char *dir = malloc(BUFF_SIZE * sizeof(*dir));
 	char *command = malloc(BUFF_SIZE * sizeof(*command));
 
-	T = atof(*(argv + 1));
+	// T = atof(*(argv + 1));
+  int j = atoi(*(argv + 1));
 
   startRNG(); // Starts the random number generator
   SpinsLattice lattice = createLattice(n, n);
@@ -46,15 +47,14 @@ int main (int argc, char *argv[]) {
   // lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
-	snprintf(dir, BUFF_SIZE, "FinalObservables");
+	snprintf(dir, BUFF_SIZE, "FinalObservables2");
 	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
 	system(command);
 
-	snprintf(dir, BUFF_SIZE, "FinalObservables/j=%uf", jPos);
+	snprintf(dir, BUFF_SIZE, "FinalObservables2/j=%uf", j);
 
 	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
 	system(command);
-
 
 	snprintf(filename, BUFF_SIZE, "%s/simulation.dat", dir);
   FILE *filePtr = fopen(filename, "w");
@@ -65,8 +65,9 @@ int main (int argc, char *argv[]) {
   fprintf(filePtr, "# ---  ------  -----  -----  ------  -------------\n");
 
   showCriticalTemperature(0); // 0 == no, 1 == yes
-  beta = 1/T; // k == 1
-  for (int j = 1; j < n; j++) {
+  // for (int j = 1; j < n; j++) {
+  while ((T -= dT) > minT) {
+    beta = 1/T; // k == 1
     lattice.pos.j = j;
 
     // Float the spins for disregarding transient states
@@ -78,6 +79,8 @@ int main (int argc, char *argv[]) {
     observables.Szi = totalSzi(lattice);
     observables.Szj = totalSzj(lattice);
     observables.SziSzj = totalSziSzj(lattice);
+    observables.Sxi = totalSxi(lattice);
+    observables.Sxj = totalSxj(lattice);
 
     // Monte Carlo loop
     for (unsigned int i = 0; i < MAX_MC_LOOPS; i++) {
@@ -88,20 +91,28 @@ int main (int argc, char *argv[]) {
           observables.adjust(lattice, &observables);
       } // end Metropolis loop
 
+      // Calculated from Sxi and Sxj
+      observables.SxiSxj = totalSxiSxj(lattice);
+
       // Store the new observables
       observables.E[i] = observables.energy;
       observables.M[i] = observables.magnetization;
+
       observables.SziArr[i] = observables.Szi;
       observables.SzjArr[i] = observables.Szj;
       observables.SziSzjArr[i] = observables.SziSzj;
+
+      observables.SxiArr[i] = observables.Sxi;
+      observables.SxjArr[i] = observables.Sxj;
+      observables.SxiSxjArr[i] = observables.SxiSxj;
     } // end monte carlo loop
 
     observables.average(lattice, &observables); // calcula avgE e avgM (e outros)
 
     // output data
     // printing T, <E>, |<M>|
-    fprintf(filePtr, " %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSziSzj - observables.avgSzi * observables.avgSzj);
-    // printf(" %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj); // this print is just to see in which Temperature is the program
+    fprintf(filePtr, " %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSziSzj - observables.avgSzi * observables.avgSzj, observables.avgSxi);
+    // printf(" %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj, observables.avgSxi); // this print is just to see in which Temperature is the program
   } // end while
 
   // the following commands desalocates the memory used

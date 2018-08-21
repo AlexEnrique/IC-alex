@@ -15,6 +15,8 @@ typedef struct SpinsLattice {
   unsigned int size;
   short i;
   short j;
+  double Jx;
+  double Jy;
   long int **spin;
 
   // Functions pointers

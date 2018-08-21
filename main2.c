@@ -47,11 +47,12 @@ int main (int argc, char *argv[]) {
   // lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
-	snprintf(dir, BUFF_SIZE, "FinalObservables2");
+  #define OBSRV_FOLDER "FinalObservables3"
+	snprintf(dir, BUFF_SIZE, "%s", OBSRV_FOLDER);
 	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
 	system(command);
 
-	snprintf(dir, BUFF_SIZE, "FinalObservables2/j=%uf", j);
+	snprintf(dir, BUFF_SIZE, "%s/j=%uf", OBSRV_FOLDER, j);
 
 	snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
 	system(command);
@@ -102,7 +103,7 @@ int main (int argc, char *argv[]) {
       observables.SxiArr[i] = observables.Sxi;
       observables.SxiSxjArr[i] = observables.SxiSxj;
       observables.Z1X2Arr[i] = observables.Z1X2;
-      observables.X1Z2Arr[i] = observables.X1Z2;    
+      observables.X1Z2Arr[i] = observables.X1Z2;
     } // end monte carlo loop
 
     observables.average(lattice, &observables); // calcula avgE e avgM (e outros)

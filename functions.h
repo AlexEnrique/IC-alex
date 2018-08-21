@@ -104,11 +104,15 @@ SpinsLattice createLattice(int Nx, int Ny) {
   _lattice.size = Nx*Ny;
   _lattice.i = 0;
   _lattice.j = 0;
-  _lattice.pos.i = 0;
-  _lattice.pos.j = jPos;
-  // _lattice.pos.i = gsl_rng_uniform_int(rng, Nx);
+  // _lattice.pos.i = 0;
+  // _lattice.pos.j = jPos;
+  _lattice.pos.i = gsl_rng_uniform_int(rng, Nx);
+  _lattice.pos.j = (_lattice.pos.i + 1) % Nx;
   // while (_lattice.pos.j == _lattice.pos.i)
   //  _lattice.pos.j = gsl_rng_uniform_int(rng, Nx);
+
+  _lattice.Jx = J;
+  _lattice.Jy = J;
 
   _lattice.memSpinsAlloc = memSpinsAlloc;
   _lattice.initSpinsInline = initSpinsInline;
@@ -128,13 +132,23 @@ SpinsLattice createLattice(int Nx, int Ny) {
 void adjustObservables(SpinsLattice lattice, Observables *this) {
   this->energy += dE;
   this->magnetization += 2 * lattice.spin[lattice.pos.x][lattice.pos.y];
+
   if (lattice.i) {
     this->Szi += (2 * lattice.spin[lattice.pos.i][lattice.pos.y] / lattice.Ny);
     this->SziSzj += (2 * lattice.spin[lattice.pos.i][lattice.pos.y] * lattice.spin[lattice.pos.j][lattice.pos.y] / lattice.Ny);
+
+    this->Sxi += 2 * lattice.spin[lattice.pos.i][lattice.pos.y] * (lattice.spin[lattice.pos.i][(lattice.pos.y + 1) % lattice.Ny] + lattice.spin[lattice.pos.i][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny]);
+    this->SxiSxj += 2 * lattice.spin[lattice.pos.i][lattice.pos.y] * (lattice.spin[lattice.pos.i][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny] + lattice.spin[lattice.pos.i][(lattice.pos.y + 1) % lattice.Ny]);
   }
-  else if (lattice.j)
+
+  else if (lattice.j) {
     this->Szj += (2 * lattice.spin[lattice.pos.j][lattice.pos.y] / lattice.Ny);
     this->SziSzj += (2 * lattice.spin[lattice.pos.j][lattice.pos.y] * lattice.spin[lattice.pos.i][lattice.pos.y] / lattice.Ny);
+
+    this->Sxj += 2 * lattice.spin[lattice.pos.j][lattice.pos.y] * (lattice.spin[lattice.pos.j][(lattice.pos.y + 1) % lattice.Ny] + lattice.spin[lattice.pos.j][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny]);
+    this->SxiSxj += 2 * lattice.spin[lattice.pos.j][lattice.pos.y] * (lattice.spin[lattice.pos.j][(lattice.pos.y - 1 + lattice.Ny) % lattice.Ny] + lattice.spin[lattice.pos.j][(lattice.pos.y + 1) % lattice.Ny]);
+  }
+
 }
 
 void average(SpinsLattice lattice, Observables *this) {
@@ -147,7 +161,16 @@ void average(SpinsLattice lattice, Observables *this) {
   this->avgSzi = sum(this->SziArr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
   this->avgSzj = sum(this->SzjArr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
 
+  this->avgSxi = sum(this->SxiArr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
+
   this->avgSziSzj = sum(this->SziSzjArr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
+  this->avgSxiSxj = sum(this->SxiSxjArr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
+
+  this->avgZ1X2 = sum(this->Z1X2Arr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
+  this->avgX1Z2 = sum(this->X1Z2Arr, MAX_MC_LOOPS) / MAX_MC_LOOPS;
+
+  double betaJy = beta * lattice.Jy;
+
 }
 
 void observablesFreeMemory(Observables *this) {
@@ -169,6 +192,7 @@ Observables createObservables() {
   _observables.SzjArr = malloc(MAX_MC_LOOPS * sizeof(*_observables.SzjArr));
   _observables.SziSzjArr = malloc(MAX_MC_LOOPS * sizeof(*_observables.SziSzjArr));
   _observables.SxiArr = malloc(MAX_MC_LOOPS * sizeof(*_observables.SxiArr));
+  _observables.SxjArr = malloc(MAX_MC_LOOPS * sizeof(*_observables.SxjArr));
   _observables.SxiSxjArr = malloc(MAX_MC_LOOPS * sizeof(*_observables.SxiSxjArr));
 
   // functions
@@ -217,7 +241,7 @@ double totalEnergy(SpinsLattice lattice) {
 
   for (unsigned int i = 0; i < Nx; i++) { // Nx == Ny == n
     for (unsigned int j = 0; j < Ny; j++) {
-      H += (-J) * lattice.spin[i][j] * (lattice.spin[(i+1) % Nx][j] + lattice.spin[i][(j+1) % Ny]);
+      H += - lattice.spin[i][j] * ( lattice.Jx * lattice.spin[(i+1) % Nx][j] + lattice.Jy * lattice.spin[i][(j+1) % Ny]);
     }
   }
 
@@ -256,6 +280,60 @@ double totalSziSzj(SpinsLattice lattice) {
 
   return (SziSzj / lattice.Ny);
 }
+
+double totalSxi(SpinsLattice lattice) {
+  double Sx = 0;
+  for (unsigned int k = 0; k < lattice.Ny; k++)
+    Sx += lattice.spin[lattice.pos.i][k] * lattice.spin[lattice.pos.i][(k+1) % lattice.Ny];
+
+  return Sx;
+}
+
+double totalSxj(SpinsLattice lattice) {
+  double Sx = 0;
+  for (unsigned int k = 0; k < lattice.Ny; k++)
+    Sx += lattice.spin[lattice.pos.j][k] * lattice.spin[lattice.pos.j][(k+1) % lattice.Ny];
+
+  return Sx;
+}
+
+double totalSxiSxj(SpinsLattice lattice) {
+  double A = 1 - 2 * pow(cosh(beta * lattice.Jy), 2);
+  double B = 2 * sinh(beta * lattice.Jy);
+  
+  return (pow(A,2) + (A*B) * (observables.Sxi + observables.Sxj) + pow(B,2) * (observables.Sxi * observables.Sxj));
+}
+
+double totalZ1X2(SpinsLattice lattice) {
+  double betaJy = beta * lattice.Jy;
+  double Z = 0, X = 0, Obsrv = 0;
+
+  for (unsigned int k = 0; k < lattice.Ny; k++) {
+    Z += lattice.spin[(lattice.pos.i+1) % lattice.Nx][k] * lattice.spin[(lattice.pos.i+1) % lattice.Nx][(k + 1) % lattice.Ny];
+    X += lattice.spin[lattice.pos.i][k];
+  }
+
+  Obsrv = ((pow(betaJy, 2) + 1) / (2*betaJy) - X) * Z;
+  Obsrv *= (pow(betaJy, 2) - 1) / (2*betaJy);
+
+  return Obsrv;
+}
+
+double totalX1Z2(SpinsLattice lattice) {
+  double betaJy = beta * lattice.Jy;
+  double Z = 0, X = 0, Obsrv = 0;
+
+  for (unsigned int k = 0; k < lattice.Ny; k++) {
+    Z += lattice.spin[lattice.pos.i][k] * lattice.spin[lattice.pos.i][(k + 1) % lattice.Ny];
+    X += lattice.spin[(lattice.pos.i+1) % lattice.Nx][k];
+  }
+
+  Obsrv = ((pow(betaJy, 2) + 1) / (2*betaJy) - X) * Z;
+  Obsrv *= (pow(betaJy, 2) - 1) / (2*betaJy);
+
+  return Obsrv;
+}
+
 
 double sum(double *arr, unsigned int lenght) {
   double S = 0;

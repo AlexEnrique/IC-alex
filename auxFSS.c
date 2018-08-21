@@ -18,11 +18,12 @@ int main (int argc) {
   system("git config --global credential.helper cache");
   system("git config --global credential.helper 'cache --timeout=36000000000000000000000000000000000'");
 
-  while ((T -= dT) > minT) {
+  // while ((T -= dT) > minT) {
+	for (int j = 1; j < ceil(MAX_N/2); j++) {
     printf("=====================================================\n");
-		printf("Calculating observables for T = %.3lf...\n", T);
+		printf("Calculating observables for j = %u...\n", j);
 
-    snprintf(call, BUFF_SIZE, "./main.exe %.3lf", T);
+    snprintf(call, BUFF_SIZE, "./main.exe %u", j);
     system(call);
 
 		printf("Done!\n\n");

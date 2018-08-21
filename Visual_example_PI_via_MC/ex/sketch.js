@@ -5,12 +5,14 @@ function setup() {
   createCanvas(hw,hw);
   background(100);
 
-  var color1 = color(0, 126, 255, 5);
-  var color2 = color(0, 255, 70, 100);
+  let color1 = color(0, 126, 255, 5);
+  let color2 = color(0, 255, 70, 100);
 }
 
 function draw() {
   let radius = height;
+  let color1 = color(0, 126, 255, 5);
+  let color2 = color(0, 255, 70, 100);
 
   translate(width/2, height/2);
   noStroke();
