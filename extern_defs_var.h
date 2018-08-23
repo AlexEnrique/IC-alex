@@ -3,10 +3,10 @@
 #ifndef EXT_VAR
 #define EXT_VAR
 
-#define MAX_MC_LOOPS 2000
+#define MAX_MC_LOOPS 2500
 #define MAX_METR_LOOPS 100 // change to size of the lattice (at the final version)?
 #define MAX_TRANSIENT 1000
-#define MAX_N 27
+#define MAX_N 30
 #define N_LATTICE_TEST 100
 
 // #define J (double) TC/2 * KB*log(1+sqrt(2)
@@ -15,7 +15,7 @@
 #define KB 1
 #define INITIAL_TEMPERATURE 5
 #define MIN_TEMPERATURE .5
-#define DELTA_T 0.05
+#define DELTA_T 0.01
 // #define TC
 // #define INITIAL_TEMPERATURE 1e2 * (-2*J / (KB*log(1+sqrt(2))))
 // #define MIN_TEMPERATURE 1e-7 * (-2*J / (KB*log(1+sqrt(2))))

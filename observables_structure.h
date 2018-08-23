@@ -11,6 +11,7 @@ typedef struct Observables {
   double Sxi;
   double Sxj;
   double SxiSxj;
+  double Bell;
 
   // array for each loop
   double *E;
@@ -21,6 +22,8 @@ typedef struct Observables {
   double *SxiArr;
   double *SxjArr;
   double *SxiSxjArr;
+  double *Z1X2Arr;
+  double *X1Z2Arr;
 
   // averaged value for observables
   double avgE;
@@ -29,18 +32,10 @@ typedef struct Observables {
   double avgSzj;
   double avgSziSzj;
   double avgSxi;
+  double avgSxj;
   double avgSxiSxj;
-
-  // New ones
-  double Z1X2;
-  double X1Z2;
-
-  double *Z1X2Arr;
-  double *X1Z2Arr;
-
   double avgZ1X2;
   double avgX1Z2;
-
 
   void (*adjust)();
   void (*average)();

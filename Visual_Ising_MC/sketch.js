@@ -1,6 +1,6 @@
 let cols;
 let rows;
-let resolution = 1;
+let resolution = 20;
 
 var countFlip = 0;
 var total = 0;
@@ -10,7 +10,7 @@ let J = -1.0;
 let k = 1;
 // let k = 1.38064852e-23;
 let phaseTransitionTemp = -2*J/(k*Math.log(1+Math.sqrt(2))); // Kelvin
-let temperature = phaseTransitionTemp-0.000001;
+let temperature = phaseTransitionTemp+1.5;
 let beta = 1/(k*temperature);
 var lattice;
 var E;
@@ -24,7 +24,7 @@ function setup() {
   lattice = createLattice(cols, rows);
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      lattice[i][j] = randomSpin();
+      // lattice[i][j] = randomSpin();
       lattice[i][j] = -1;
       // lattice[i][j] = ((i+j) % 2) ? 1:-1;
     }

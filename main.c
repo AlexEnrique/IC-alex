@@ -30,7 +30,7 @@ int main (int argc, char *argv[]) {
 	char *command = malloc(BUFF_SIZE * sizeof(*command));
 
 	// T = atof(*(argv + 1));
-  int j = atoi(*(argv + 1));
+  // int j = atoi(*(argv + 1));
 
   startRNG(); // Starts the random number generator
   SpinsLattice lattice = createLattice(n, n);
@@ -47,12 +47,12 @@ int main (int argc, char *argv[]) {
   // lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
-  #define OBSRV_FOLDER "FinalObservables3"
+  #define OBSRV_FOLDER "FinalObservables5"
   snprintf(dir, BUFF_SIZE, "%s", OBSRV_FOLDER);
   snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
   system(command);
 
-  snprintf(dir, BUFF_SIZE, "%s/j=%uf", OBSRV_FOLDER, j);
+  snprintf(dir, BUFF_SIZE, "%s/j=i+1", OBSRV_FOLDER);
 
   snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
   system(command);
@@ -61,9 +61,8 @@ int main (int argc, char *argv[]) {
   FILE *filePtr = fopen(filename, "w");
 
   // Formating output file
-  fprintf(filePtr, "# i = %d\tj = %d\n", lattice.pos.i, lattice.pos.j);
-  fprintf(filePtr, "# T(K)   <E>   |<M>|   Szi   SziSzj  Corr(Szi,Szj)\n");
-  fprintf(filePtr, "# ---  ------  -----  -----  ------  -------------\n");
+  fprintf(filePtr, "# T(K)  <E>    <|M|>     Szi    C(Sz)    Sxi    C(Sx)   Z1X2    X1Z2    Bell\n");
+  fprintf(filePtr, "# ---  ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
 
   showCriticalTemperature(0); // 0 == no, 1 == yes
   // for (int j = 1; j < n; j++) {
@@ -93,10 +92,6 @@ int main (int argc, char *argv[]) {
           observables.adjust(lattice, &observables);
       } // end Metropolis loop
 
-      // Observables calculated from Sxi and Sxj
-      observables.SxiSxj = totalSxiSxj(lattice, observables);
-      observables.Z1X2 = totalZ1X2(lattice, observables);
-      observables.X1Z2 = totalX1Z2(lattice, observables);
 
       // Store the new values
       observables.E[i] = observables.energy;
@@ -108,19 +103,46 @@ int main (int argc, char *argv[]) {
 
       observables.SxiArr[i] = observables.Sxi;
       observables.SxjArr[i] = observables.Sxj;
-      observables.SxiSxjArr[i] = observables.SxiSxj;
+      observables.SxiSxjArr[i] = observables.Sxi * observables.Sxj;
 
-      // Só falta implementar estes observáveis.
-      observables.Z1X2Arr[i] = observables.Z1X2;
-      observables.X1Z2Arr[i] = observables.X1Z2;
+      observables.Z1X2Arr[i] = observables.Szi * observables.Sxj;
+      observables.X1Z2Arr[i] = observables.Sxi * observables.Szj;
     } // end monte carlo loop
 
     observables.average(lattice, &observables); // calcula avgE e avgM (e outros)
+    observables.Bell = -sqrt(2) * observables.avgZ1X2 + observables.avgSxiSxj;
 
     // output data
-    // printing T, <E>, |<M>|
-    fprintf(filePtr, " %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSziSzj - observables.avgSzi * observables.avgSzj, observables.avgSxi);
-    // printf(" %.2lf  %u  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf  %.3lf\n", T, j, observables.avgE, fabs(observables.avgM), observables.avgSzi, observables.avgSziSzj, observables.avgSzi * observables.avgSziSzj - observables.avgSziSzj, observables.avgSxi); // this print is just to see in which Temperature is the program
+    // formating output file
+    fprintf(filePtr, "  %.2lf  ", T);
+    if (observables.avgE >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgE);
+    fprintf(filePtr, " %.3lf  ", fabs(observables.avgM));
+    if (observables.avgSzi >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgSzi);
+    if (observables.avgSziSzj - observables.avgSzi * observables.avgSzj >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgSziSzj - observables.avgSzi * observables.avgSzj);
+    if (observables.avgSxi >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgSxi);
+    if (observables.avgSxiSxj - observables.avgSxi * observables.avgSxj >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgSxiSxj - observables.avgSxi * observables.avgSxj);
+    if (observables.avgZ1X2 >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgZ1X2);
+    if (observables.avgX1Z2 >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.avgX1Z2);
+    if (observables.Bell >= 0)
+      fprintf(filePtr, " ");
+    fprintf(filePtr, "%.3lf  ", observables.Bell);
+    fprintf(filePtr, "\n");
+
+    printf("Calculating for T = %.3lf\n", T);
   } // end while
 
   // the following commands desalocates the memory used
