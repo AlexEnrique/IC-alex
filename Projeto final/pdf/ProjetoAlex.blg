@@ -1,0 +1,50 @@
+This is BibTeX, Version 0.99d (TeX Live 2016/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: resumo.aux
+The style file: abbrv.bst
+Database file #1: resumoNotes.bib
+Database file #2: ref.bib.bib
+Warning--empty journal in KramersWannier
+Warning--empty journal in FiftyYears
+You've used 17 entries,
+            2118 wiz_defined-function locations,
+            613 strings with 5888 characters,
+and the built_in function-call counts, 4143 in all, are:
+= -- 400
+> -- 166
+< -- 0
++ -- 71
+- -- 50
+* -- 229
+:= -- 754
+add.period$ -- 51
+call.type$ -- 17
+change.case$ -- 73
+chr.to.int$ -- 0
+cite$ -- 19
+duplicate$ -- 181
+empty$ -- 339
+format.name$ -- 50
+if$ -- 839
+int.to.chr$ -- 0
+int.to.str$ -- 17
+missing$ -- 21
+newline$ -- 88
+num.names$ -- 34
+pop$ -- 77
+preamble$ -- 1
+purify$ -- 59
+quote$ -- 0
+skip$ -- 126
+stack$ -- 0
+substring$ -- 166
+swap$ -- 15
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 60
+warning$ -- 2
+while$ -- 39
+width$ -- 19
+write$ -- 180
+(There were 2 warnings)

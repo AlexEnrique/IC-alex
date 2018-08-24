@@ -17,6 +17,7 @@
 \contentsline {subsection}{\numberline {II.7}Vantagens do C\IeC {\'a}lculo de Observ\IeC {\'a}veis Qu\IeC {\^a}nticos via Modelo Cl\IeC {\'a}ssico}{9}{section*.14}
 \contentsline {section}{\numberline {III}Resultados}{9}{section*.15}
 \contentsline {subsection}{\numberline {III.1}Observ\IeC {\'a}veis Cl\IeC {\'a}ssicos para o Modelo Isotr\IeC {\'o}pico}{9}{section*.16}
-\contentsline {subsection}{\numberline {III.2}Observ\IeC {\'a}veis Qu\IeC {\^a}nticos - Modelo Cl\IeC {\'a}ssico Anisotr\IeC {\'o}pico}{9}{section*.17}
-\contentsline {section}{\numberline {IV}Conclus\IeC {\~a}o}{9}{section*.18}
+\contentsline {subsection}{\numberline {III.2}Observ\IeC {\'a}veis Qu\IeC {\^a}nticos - Modelo Cl\IeC {\'a}ssico Anisotr\IeC {\'o}pico}{10}{section*.17}
+\contentsline {section}{\numberline {IV}Conclus\IeC {\~a}o}{11}{section*.18}
+\contentsline {section}{Refer\IeC {\^e}ncias}{11}{section*.18}
 \contentsline {section}{\numberline {}Refer\^encias}{11}{section*.19}

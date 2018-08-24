@@ -133,7 +133,7 @@ Costumeiramente, toma-se os acoplamentos $J_{ij}$ iguais, ao menos para cada ind
 Abaixo apresentamos dois exemplos. 
 \begin{flalign}
 	H(\{ \sigma \}) &= -J \sum_i \sigma_i \sigma_{i+1} - B \sum_i \sigma_i, \label{eq:II.2} \\
-	H(\{ \sigma \}) &= -J_1 \sum_{i,j} \sigma\indices{_i^j} \sigma\indices{_{i+1}^j} - J_2 \sum_{i,j} \sigma\indices{_i^j} \sigma\indices{_i^{j+1}}. \label{eq:II.3}
+	H(\{ \sigma \}) &= -J_1 \sum_{i,j} \sigma_i^j \sigma_{i+1}^j - J_2 \sum_{i,j} \sigma_i^j \sigma_i^{j+1}. \label{eq:II.3}
 \end{flalign}
 
 A hamiltoniana (\ref{eq:II.2}) representa o modelo em uma dimensão, com acoplamento igual para todos os spins e mesma ação devido ao campo magnético e (\ref{eq:II.3}) represente um modelo de hamiltoniana em duas dimensões, denotadas pelos indices subscritos e sobrescritos em $\sigma$, com acoplamento anisotrópico na direção vertical e horizontal ($J_1$ e $J_2$) e na ausência de campo magnético. 
@@ -422,7 +422,7 @@ Denotemos $\ev{ \cdot }_q$ o valor esperado quântico e $\ev{ \cdot }_{cl}$ o va
 	\ev{ \sz_i }_q &= \frac{1}{N_y} \ev{ \sum_{k=1}^{N_y} \sigma_i^k }_{cl}, \\
 	\ev{ \sz_i \sz_j }_q &= \frac{1}{N_y} \ev{ \sum_{k=1}^{N_y} \sigma_i^k \sigma_j^k }_{cl}, \\
 	\ev{ \sx_i }_q &= \frac{1}{N_y} \ev{ \sum_{k=0}^{N_y} \sigma_i^k \sigma_i^{k+1} }_{cl}, \\
-	\ev{ \sx_i \sx_j }_q &= \frac{1}{N_y} \ev{ \qty(\sum_{k=0}^{N_y} \sigma_i^k \sigma_i^{k+1}) \qty(\sum_{k=0}^{N_y} \sigma_j^k \sigma_j^{k+1})}_{cl}, \\
+	\ev{ \sx_i \sx_j }_q &= \frac{1}{N_y^2} \ev{ \qty(\sum_{k=0}^{N_y} \sigma_i^k \sigma_i^{k+1}) \qty(\sum_{k=0}^{N_y} \sigma_j^k \sigma_j^{k+1})}_{cl}, \\
 	\ev{ \sz_i \sx_j }_q &= \frac{1}{N_y^2} \ev{ \qty(\sum_{k=0}^{N_y} \sigma_i^k) \qty(\sum_{k=0}^{N_y} \sigma_j^k \sigma_j^{k+1}) }_{cl}. 
 \end{flalign*}
 
@@ -520,7 +520,7 @@ A Figura \ref{fig:II.2} representa alguns teste para o cálculo da energia médi
 \begin{figure}[h]
 	\center
 	\includegraphics[scale=.35]{Energy.pdf}
-	\caption{Energia média por spins para valores de $N=2$ até $N = 1000$.}
+	\caption{Energia média por spins (eixo vertial) para valores de $N=2$ até $N = 1000$. Eixo horizontal representando a temperatura.}
 	\label{fig:II.2}
 \end{figure}
 
@@ -531,92 +531,86 @@ Note que os gráficos parecem se aproximar de um gráfico limite, que parece com
 \begin{figure}[h]
 	\center
 	\includegraphics[scale=.35]{Magnetization.pdf}
-	\caption{Magnetização absoluta média variando-se as quantidades de spins de 25 até 1000.}
+	\caption{Magnetização absoluta média (eixo vertical) em função da temperatura (eixo horintal) variando-se as quantidades de spins de 25 até 1000.}
+	\label{fig:II.3}
 \end{figure}
 
-O resultado obtido para 10000 spins se aproxima muito da solução exata do modelo de Ising \cite{Baxter, Huang}. 
+Podemos notar que o resultado obtido para 10000 spins se aproxima muito da solução exata do modelo de Ising \cite{Baxter, Huang}. De fato, o gráfico esperado para a magnetização é como a Figura \ref{fig:II.4}.  
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Com isso e com uma análise um pouco mais criteriosa do programa, podemos ter certeza que a implementação está correta e que nos dará os resultados esperados. Podemos partir para a introdução da anisotropia e calcular os observáveis quânticos.
 
 
 
 \subsection{Observáveis Quânticos - Modelo Clássico Anisotrópico}
 \label{subsec:ObservaveisQuanticosModeloAnisotropico}
 
+A adaptação do programa para o modelo anisotrópico é feita de forma muito simples. Introduz-se um novo termo de acoplamento e adaptamos as expressões para os observáveis. A questão que surge é: quais valores adotar para os acoplamentos $J_x$ e $J_y$ nas direções verticais e horizontais, respectivamente? 
+
+Esse problema pode ser resolvido utilizando-se algumas relações de simetria para o modelo. Pouco antes da solução de Onsager, na década de 40, ocorreu o descobrimento da \textit{dualidade de Kramers-Wannier}, uma relação de simetria que permitiu obter-se o diagrama de fase teórico para o modelo \cite{Kramers-1941I, Kramers-1941II}. 
+
+O resultado do diagrama de fase devida a auto-dualidade do modelo pode ser estendida para o modelo quântico \cite{KogutMain}. Relacionando as variáveis clássicas e quânticas, podemos determinar a relação do acoplamento. 
+
+Por questão de simplicidade, visto que os resultado para o modelo são apenas qualitativos; não utilizamos unidades reais para o calculo de algo, adotou-se $J_x = 0.03$ e $J_y = 0.97$. 
+
+
+
+A simulação para os observáveis $\sz_i$ e $\sx_i$ estão mostradas nas Figuras \ref{fig:II.5} e \ref{fig:II.6}. 
+
+
+Dos perfis observados para as funções de correlação, poderíamos ter a ideia de que uma descontinuidade nos observáveis envolvidos na desiguraldade de Bell via (\ref{eq:II.12}) se mostraria presente. Este é um resultado interessante. Havendo regiões onde a desigualdade é respeitada ou não nos levaria a encarar o diagrama de fases da rede como um diagrama de comportamento mais clássico e uma região de comportamento fortemente não-clássico. 
+
+O comportamento presente na correlação para $\sx$ nos diz que a soma em (\ref{eq:II.12}) terá o mesmo perfil, visto que a descontinuidade na função se faz mais aparente do que a descontinuidade em sua derivda, para a soma dos observáveis da desigualdade de Bell. 
+
 \begin{figure}[h]
 	\center
-	\includegraphics[scale=.35]{IsotropicMBell.pdf}
-	\caption{Simulação para a desigualdade de Bell para o modelo clássico isotrópico.}
+	\includegraphics[scale=.3]{ExactMagnet.pdf}
+	\caption{Comparação entre a simulação computacional (azul) e a solução exata de Onsager (vermelho)}
+	\label{fig:II.4}
+\end{figure}
+
+\begin{figure}[h]
+	\center
+	\includegraphics[scale=.3]{CorrSz.pdf}
+	\caption{Função de correlação $\ev{\sz_i \sz_j} - \ev{\sz_i} \ev{\sz_j}$ (vertical) em função da temperatura (horizontal).}
+	\label{fig:II.6}
+\end{figure}
+
+
+\begin{figure}[h]
+	\center
+	\includegraphics[scale=.3]{CorrSx.pdf}
+	\caption{Função de correlação $\ev{\sx_i \sx_j} - \ev{\sx_i} \ev{\sx_j}$ (vertical) em função da temperatura (horizontal).}
+	\label{fig:II.6}
 \end{figure}
 
 
 
+A Figura \ref{fig:II.7} ilustra o cálculo da soma em (\ref{eq:II.12}), variândo-se a temperatura. O resultado é o esperado. Vemos que sugere uma descontinuidade na região de transição de fase. A forma da descontinuidade é tal que, na transição, a desigualdade de Bell é violada. Isso representa que a transição de fase é o momento onde o sistema quântico se torna mais fortemente emaranhado. 
+
+\begin{figure}[h]
+	\center
+	\includegraphics[scale=.3]{IsotropicMBell.pdf}
+	\caption{Valores esperados da desigualdade de Bell  (\ref{eq:II.11})$-$(\ref{eq:II.12}) (eixo vertical) em função da temperatura (eixo horizontal).}
+	\label{fig:II.7}
+\end{figure}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+\newpage
 
 \section{Conclusão}
 \label{sec:Conclusao}
 
-Conclusão a ser feita.
+Com os resultados apresentado, mostrou-se que medidas de emaranhamento podem ser calculadas fazendo uso de simulação computacional com o sistema clássico, por meio do mapeamento clássico-quântico. 
 
+Através dos análogos clássicos para os observáveis quânticos, pôde-se estudar o comportamento de uma das desigualdades de Bell, em função da temperatura. O resultado obtido nos permitiu ver o regime de transição de fase como o regime pra o qual o sistema se encontra mais fortemente emaranhado, de tal forma que a localidade da medida é quebrada, com isso, o flip de um spin em uma posição da rede causa uma excitação que se propaga sem perda por distâncias infinitas, representando a divergência do comprimento de correlação da rede durante a transição, dado que a desigualdade de Bell passa a ser violada na temperatura de transição de fase.
+Ao se afastar da transição, a desigualdade volta a ser respeitada.
 
+Podemos entender este resultado como se a transição de fase no modelo quântico fosse uma transição do tipo localidade$-$não localidade. 
 
-
-
-
-\clearpage
-
+Os cálculos envolvidos foram da ordem de cinco minutos para uma rede $50 \times 50$, com 3000 iterações para o laço de Monte Carlo e o tamanho da rede para o laço do algoritmo de Metropolis. O tempo de processamento é razoávelmente baixo, visto que o problema é do tipo NP-complexo. Retomando a discução acerca da simulação direta do modelo quântico, é fácil perceber que a aplicação de diversas matrizes de ordem $50 \times 50$ em vetores de estado com $50$ componentes é um trabalho muito custoso. Assim, podemos concluir que a eficiência obtida por meio da técnica utilizada é alta, nos fornecendo bons resultados como visto em \ref{subsec:ObservaveisClassicosParaOModeloIsotropico} e \ref{subsec:ObservaveisQuanticosModeloAnisotropico}. 
 
 
 
