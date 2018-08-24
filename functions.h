@@ -112,11 +112,11 @@ SpinsLattice createLattice(int Nx, int Ny) {
   //  _lattice.pos.j = gsl_rng_uniform_int(rng, Nx);
 
   // Isotropico
-  _lattice.Jx = J;
-  _lattice.Jy = J;
+  // _lattice.Jx = J;
+  // _lattice.Jy = J;
 
-  // _lattice.Jx = 0.07*J;
-  // _lattice.Jy = 0.93*J;
+  _lattice.Jx = 0.07*J;
+  _lattice.Jy = 0.93*J;
 
   _lattice.memSpinsAlloc = memSpinsAlloc;
   _lattice.initSpinsInline = initSpinsInline;
