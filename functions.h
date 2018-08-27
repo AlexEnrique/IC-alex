@@ -115,8 +115,8 @@ SpinsLattice createLattice(int Nx, int Ny) {
   // _lattice.Jx = J;
   // _lattice.Jy = J;
 
-  _lattice.Jx = 0.07*J;
-  _lattice.Jy = 0.93*J;
+  _lattice.Jx = 0.03*J;
+  _lattice.Jy = 0.97*J;
 
   _lattice.memSpinsAlloc = memSpinsAlloc;
   _lattice.initSpinsInline = initSpinsInline;
@@ -240,8 +240,8 @@ double deltaE(SpinsLattice lattice) {
 }
 
 short flipSpin(SpinsLattice *this) {
-  dE = deltaE(*this); // Declared after in the main.c file
-  if (dE < 0 || gsl_rng_uniform(rng) < exp(-beta*dE)) {
+  dE = deltaE(*this); // Declared after in the main.c file at line 14
+  if ((dE < 0) ^ (gsl_rng_uniform(rng) < exp(-beta*dE))) { // p ^ q == XOR(p, q)
     this->spin[this->pos.x][this->pos.y] *= -1;
     return 1; // 1 == yes, spin flipped
   }
