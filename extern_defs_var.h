@@ -4,7 +4,7 @@
 #define EXT_VAR
 
 #define MAX_MC_LOOPS 2500
-#define MAX_METR_LOOPS 100 // changed to size of the lattice in main.c
+#define MAX_METR_LOOPS 500 // changed to size of the lattice in main.c
 #define MAX_TRANSIENT 1000
 #define MAX_N 100
 #define N_LATTICE_TEST 100
