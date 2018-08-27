@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
   // lattice.initSpinsRandomly(&lattice);
 
   // File to output the data calculated
-  #define OBSRV_FOLDER "FinalObservables5"
+  #define OBSRV_FOLDER "FinalObservables6"
   snprintf(dir, BUFF_SIZE, "%s", OBSRV_FOLDER);
   snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
   system(command);
@@ -76,7 +76,7 @@ int main (int argc, char *argv[]) {
     lattice.floatSpins(&lattice);
 
     printf("Calculating observables...");
-	
+
     // Calculate the observables before the MC loop (for some temperature)
     observables.energy = totalEnergy(lattice);
     observables.magnetization = totalMagnetization(lattice);
@@ -147,7 +147,7 @@ int main (int argc, char *argv[]) {
     fprintf(filePtr, "%.3lf  ", observables.Bell);
     fprintf(filePtr, "\n");
 
-		printf("Done for T=%.3lf!\n\n", T);	
+		printf("Done for T=%.3lf!\n\n", T);
   } // end while
 
   // the following commands desalocates the memory used
