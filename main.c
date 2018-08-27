@@ -61,17 +61,22 @@ int main (int argc, char *argv[]) {
   FILE *filePtr = fopen(filename, "w");
 
   // Formating output file
-  fprintf(filePtr, "# T(K)  <E>    <|M|>     Szi    C(Sz)    Sxi    C(Sx)   Z1X2    X1Z2    Bell\n");
-  fprintf(filePtr, "# ---  ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
+  fprintf(filePtr, "#  T(K)  <E>    <|M|>     Szi    C(Sz)    Sxi    C(Sx)   Z1X2    X1Z2    Bell\n");
+  fprintf(filePtr, "#  ---  ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
 
+	printf("-- Boltzmann constant = 1 --\n\n");
   showCriticalTemperature(0); // 0 == no, 1 == yes
   // for (int j = 1; j < n; j++) {
   while ((T -= dT) > minT) {
     beta = 1/T; // k == 1
+		printf("Temperature set to %.3lf\n", T);
 
     // Float the spins for disregarding transient states
+		printf("Process of thermalization...\n");
     lattice.floatSpins(&lattice);
 
+    printf("Calculating observables...");
+	
     // Calculate the observables before the MC loop (for some temperature)
     observables.energy = totalEnergy(lattice);
     observables.magnetization = totalMagnetization(lattice);
@@ -142,7 +147,7 @@ int main (int argc, char *argv[]) {
     fprintf(filePtr, "%.3lf  ", observables.Bell);
     fprintf(filePtr, "\n");
 
-    printf("Calculating for T = %.3lf\n", T);
+		printf("Done for T=%.3lf!\n\n", T);	
   } // end while
 
   // the following commands desalocates the memory used
