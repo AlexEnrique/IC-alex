@@ -75,7 +75,7 @@ int main (int argc, char *argv[]) {
 		printf("Process of thermalization...\n");
     lattice.floatSpins(&lattice);
 
-    printf("Calculating observables...");
+    printf("Calculating observables...\n");
 
     // Calculate the observables before the MC loop (for some temperature)
     observables.energy = totalEnergy(lattice);
