@@ -19,7 +19,7 @@ function fluctuateLattice() {
   pos.choseRandomPosition();
 
   let dE = deltaE(pos);
-  if (dE < 0 || random() < exp(-beta*dE)) {
+  if ((dE < 0) ^ (random() < exp(-beta*dE))) {
     E += dE;
     flip(pos);
     return 1;
