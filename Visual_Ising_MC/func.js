@@ -19,7 +19,9 @@ function fluctuateLattice() {
   pos.choseRandomPosition();
 
   let dE = deltaE(pos);
-  if ((dE < 0) ^ (random() < exp(-beta*dE))) {
+
+  // console.log("dE<=0:"+(dE<=0)+" | exp:"+exp(-dE/temperature));
+  if ((dE < 0) || (random() < exp(-beta*dE))) {
     E += dE;
     flip(pos);
     return 1;
@@ -54,14 +56,14 @@ function deltaE(pos) {
       neigbSum += lattice[pos.x][(pos.y - 1 + rows) % rows];
       neigbSum += lattice[pos.x][(pos.y + 1) % rows];
 
-  return ( 2 * J * (-lattice[pos.x][pos.y]) * neigbSum);
+  return ( -2 * (J * neigbSum - B) * (-lattice[pos.x][pos.y]) );
 }
 
 function totalEnergy(cols, rows) {
   var H = 0;
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      H += (-J) * lattice[i][j] * ( lattice[(i+1)%cols][j] + lattice[i][(j+1)%rows] );
+      H += (J * ( lattice[(i+1)%cols][j] + lattice[i][(j+1)%rows] ) - B) * lattice[i][j];
     }
   }
 
