@@ -20,10 +20,10 @@ Other branchs in the repository could be of interest.
     <title>Ising Chain</title>
 
     <!-- <script src="../addons/p5.sound.min.js"></script> -->
-    <script src="VisualSimulation--2D-Ising/p5.min.js"></script>
-    <script src="VisualSimulation--2D-Ising/p5.dom.min.js"></script>
-    <script src="VisualSimulation--2D-Ising/func.js"></script>
-    <script src="VisualSimulation--2D-Ising/sketch.js"></script>
+    <script src="p5.min.js"></script>
+    <script src="p5.dom.min.js"></script>
+    <script src="func.js"></script>
+    <script src="sketch.js"></script>
   </head>
   <body>
   </body>
