@@ -7,28 +7,3 @@ There are folders to the main code and the data of the simulation to some observ
 The compiled code for 10000 spins is in the path MainSimuationCode/simulation.exe. Keep in mind that 10000 spins is realy a big number for the Monte Carlo + Metropolis algorithm, who are (together) O(n^2) (the 2D Ising Model is a NP-Complete problem).
 
 Other branchs in the repository could be of interest.
-
-{::nomarkdown}
-
-<!-- HTML CODE-->
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
-    <style> body {padding: 0; margin: 0;} </style>
-    <title>Ising Chain</title>
-
-    <!-- <script src="../addons/p5.sound.min.js"></script> -->
-    <script src="p5.min.js"></script>
-    <script src="p5.dom.min.js"></script>
-    <script src="func.js"></script>
-    <script src="sketch.js"></script>
-  </head>
-  <body>
-  </body>
-</html>
-
-
-
-{:/}
