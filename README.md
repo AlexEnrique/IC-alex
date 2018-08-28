@@ -8,8 +8,5 @@ There are folders to the main code and the data of the simulation to some observ
 The compiled code for 10000 spins is in the path MainSimuationCode/simulation.exe. Keep in mind that 10000 spins is realy a big number for the Monte Carlo + Metropolis algorithm, who are (together) O(n^2) (the 2D Ising Model is a NP-Complete problem).
 
 Other branchs in the repository could be of interest.
-<<<<<<< HEAD
 
-In the link (https://alexenrique.github.io/IC-alex/) you will encounter a script visual simulation to the 2D Ising Model. Type ctrl+shift+J to display the console to see messages.
-=======
->>>>>>> 265d083b2b5e27c41f59506eb091dbc092777cf8
+In the link (https://alexenrique.github.io/IC-alex/) you will encounter a script visual simulation to the 2D Ising Model. Type ctrl+shift+J to display the console of your browser.
