@@ -50,5 +50,5 @@ Using the browser console, you can change and see some values more precisely, fo
 * The temperatura and the phase transition temperature can be visualized by entering <code>temperature</code> and <code>phaseTransitionTemp</code>, respectively. 
 * The mean energy and the mean absolute magnetization can be visualized by typing **E** and **Mabs** into the console.
 
-<hr />
+<h3>Thank you</h3>
 I hope you enjoy the visualization. 
