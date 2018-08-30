@@ -5,7 +5,7 @@
 
 **Or**
 
-1. Download all those files to a folder.
+1. Download all the files inside the folder *JS-2dIsing*.
 2. Open "index.html" using an internet browser.
 
 <hr />
