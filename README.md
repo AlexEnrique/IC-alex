@@ -52,3 +52,5 @@ Using the browser console, you can change and see some values more precisely, fo
 
 <h3>Thank you</h3>
 I hope you enjoy the visualization. 
+<br />
+-Alex Enrique Crispim.
