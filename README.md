@@ -1,3 +1,17 @@
-# Simulações para o projeto final de Iniciação Científica - Alex Enrique Crispim.
+# Visualization for the 2D Ising Model.
+<h2> Running the visualization </h2>
 
-This branch have the JavaScript code for Ising Model. The branch was created by editing the code before pulling into the master branch.
+- Go to [this link](https://alexenrique.github.io/IC-alex/JS-2dIsing/).
+
+**Or**
+
+1. Download all those files to a folder.
+2. Open "index.html" using an internet browser.
+
+<hr />
+
+- You can change the JS code <code>sketch.js</code> or/and <code>func.js</code> and refresh the index.html page opened
+
+<h2> Understanding the visualization </h2>
+
+When you open the simulation, it will look like this:
