@@ -246,7 +246,7 @@ double deltaE(SpinsLattice lattice) {
 
 short flipSpin(SpinsLattice *this) {
   dE = deltaE(*this); // Declared after in the main.c file at line 14
-  if (dE < 0 || (rand() / (RAND_MAX - 1)) < exp(-beta*dE)) { // p ^ q == XOR(p, q)
+  if (dE < 0 || (rand() / RAND_MAX) < exp(-beta*dE)) { // p ^ q == XOR(p, q)
     this->spin[this->pos.x][this->pos.y] *= -1;
     return 1; // 1 == yes, spin flipped
   }
