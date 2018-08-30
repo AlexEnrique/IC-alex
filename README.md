@@ -17,7 +17,7 @@
 
 When you open the simulation, it will look like this:
 
-<img src="https://github.com/AlexEnrique/IC-alex/blob/IsingJS-v1.2/IsingVS.png?raw=true" alt="2D-Ising" title="2D Ising Simulation" />
+<img src="https://github.com/AlexEnrique/IC-alex/blob/IsingJS-v1.2/IsingVS.png?raw=true" alt="2D-Ising" title="2D Ising Simulation" class="center" />
 
 From the left to the right, there are the <code>temperature slider</code> and the <code>temperature box</code> and the buttons <code>Set temperature</code> and <code>Phase transition</code>. On the middle part, there existis optins for the <code>Spins arrangment</code> and the <code>Magnetic Field</code>. At the righest area, lives four button to <code>start</code> and <code>stop</code> the simulation, to <code>restart</code> a simulation stopped and to <code>reset</code> the entire lattice.
 
@@ -54,4 +54,4 @@ Using the browser console, you can change and see some values more precisely, fo
 <h3>Thank you</h3>
 I hope you enjoy the visualization. 
 <br />
--Alex Enrique Crispim.
+- Alex Enrique Crispim.
