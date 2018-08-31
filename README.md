@@ -52,7 +52,9 @@ Using the browser console, you can change and see some values more precisely, fo
 * The mean energy and the mean absolute magnetization can be visualized by typing **E** and **Mabs** into the console.
  
 <hr />
-<h3>Thank you</h3>
+<h3>Thanks</h3>
+This simulation code was based on the [coding challenge #85](http://thecodingtrain.com/CodingChallenges/085-the-game-of-life.html), by [Daniel Shiffman](https://github.com/shiffman).
+
 I hope you enjoy the visualization. 
 <br />
 - Alex Enrique Crispim.
