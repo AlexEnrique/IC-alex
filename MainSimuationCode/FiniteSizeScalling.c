@@ -36,9 +36,10 @@ int main (int argc, char *argv[]) {
   Observables observables = createObservables();
 
   // Initialization of variables
-  dT = DELTA_T;
-  T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do 'while' abaixo
-  minT = MIN_TEMPERATURE;
+  // dT = DELTA_T;
+  // T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do 'while' abaixo
+  // minT = MIN_TEMPERATURE;
+  T = 1.000;
 
   // File to output the data calculated
   #define OBSRV_FOLDER "FSS-Data"
@@ -51,14 +52,14 @@ int main (int argc, char *argv[]) {
 
   // Formating output file
   fprintf(filePtr, "#   n   1/n    <E>    <|M|>     Szi    C(Sz)    Sxi    C(Sx)   Z1X2    X1Z2    Bell\n");
-  fprintf(filePtr, "#  ---  ----  ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
+  fprintf(filePtr, "#  ---  ---   ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
 
 	printf("-- Boltzmann constant = 1 --\n\n");
   showCriticalTemperature(0); // 0 == no, 1 == yes
   // while ((T -= dT) > minT) {
   beta = 1/T; // k == 1
   printf("Temperature set to %.3lf\n", T);
-  for (unsigned int n = 1; n < MAX_N; n++) {
+  for (unsigned int n = 2; n < 101; n++) {
 		printf("n = %u\n", n);
 
 		// Initialization of structures
