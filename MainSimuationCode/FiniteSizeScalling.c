@@ -23,7 +23,7 @@ unsigned int jPos = 1;
 #include "observables_structure.h"
 
 int main (int argc, char *argv[]) {
-  unsigned int n = MAX_N;
+  // unsigned int n = MAX_N;
   double T, dT, minT;
 	char *filename = malloc(BUFF_SIZE * sizeof(*filename));
 	char *dir = malloc(BUFF_SIZE * sizeof(*dir));
@@ -46,12 +46,12 @@ int main (int argc, char *argv[]) {
   snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
   system(command);
 
-  snprintf(filename, BUFF_SIZE, "%s/simulation.dat", dir);
+  snprintf(filename, BUFF_SIZE, "%s/simulationFSS.dat", dir);
   FILE *filePtr = fopen(filename, "w");
 
   // Formating output file
-  fprintf(filePtr, "#  T(K)  <E>    <|M|>     Szi    C(Sz)    Sxi    C(Sx)   Z1X2    X1Z2    Bell\n");
-  fprintf(filePtr, "#  ---  ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
+  fprintf(filePtr, "#   n   1/n    <E>    <|M|>     Szi    C(Sz)    Sxi    C(Sx)   Z1X2    X1Z2    Bell\n");
+  fprintf(filePtr, "#  ---  ----  ------  -----    -----   -----   -----   -----   -----  ------   -----\n");
 
 	printf("-- Boltzmann constant = 1 --\n\n");
   showCriticalTemperature(0); // 0 == no, 1 == yes
@@ -116,6 +116,7 @@ int main (int argc, char *argv[]) {
     // output data
     // formating output file
     fprintf(filePtr, "  %u  ", n);
+		fprintf(filePtr, "  %.3lf  ", (double)1/n);
     if (observables.avgE >= 0)
       fprintf(filePtr, " ");
     fprintf(filePtr, "%.3lf  ", observables.avgE);
