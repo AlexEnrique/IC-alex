@@ -52,11 +52,6 @@ int main (int argc, char *argv[]) {
   snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
   system(command);
 
-  snprintf(dir, BUFF_SIZE, "%s/j=i+1", OBSRV_FOLDER);
-
-  snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
-  system(command);
-
   snprintf(filename, BUFF_SIZE, "%s/simulation.dat", dir);
   FILE *filePtr = fopen(filename, "w");
 

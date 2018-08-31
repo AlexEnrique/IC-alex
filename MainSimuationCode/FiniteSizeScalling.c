@@ -33,7 +33,6 @@ int main (int argc, char *argv[]) {
   // int j = atoi(*(argv + 1));
 
   startRNG(); // Starts the random number generator
-  SpinsLattice lattice = createLattice(n, n);
   Observables observables = createObservables();
 
   // Initialization of variables
@@ -41,13 +40,8 @@ int main (int argc, char *argv[]) {
   T = INITIAL_TEMPERATURE + dT; // dT é descontado no inicio do 'while' abaixo
   minT = MIN_TEMPERATURE;
 
-  // Initialization of structures
-  lattice.memSpinsAlloc(&lattice);
-  lattice.initSpinsInline(&lattice);
-  // lattice.initSpinsRandomly(&lattice);
-
   // File to output the data calculated
-  #define OBSRV_FOLDER "ObservablesData"
+  #define OBSRV_FOLDER "FSS-Data"
   snprintf(dir, BUFF_SIZE, "%s", OBSRV_FOLDER);
   snprintf(command, BUFF_SIZE, "if [ ! -d \"%s\" ]; then mkdir %s; fi", dir, dir);
   system(command);
@@ -61,10 +55,17 @@ int main (int argc, char *argv[]) {
 
 	printf("-- Boltzmann constant = 1 --\n\n");
   showCriticalTemperature(0); // 0 == no, 1 == yes
-  // for (int j = 1; j < n; j++) {
-  while ((T -= dT) > minT) {
-    beta = 1/T; // k == 1
-		printf("Temperature set to %.3lf\n", T);
+  // while ((T -= dT) > minT) {
+  beta = 1/T; // k == 1
+  printf("Temperature set to %.3lf\n", T);
+  for (unsigned int n = 1; n < MAX_N; n++) {
+		printf("n = %u\n", n);
+
+		// Initialization of structures
+		SpinsLattice lattice = createLattice(n, n);
+	  lattice.memSpinsAlloc(&lattice);
+	  lattice.initSpinsInline(&lattice);
+	  // lattice.initSpinsRandomly(&lattice);
 
     // Float the spins for disregarding transient states
 		printf("Process of thermalization...\n");
@@ -114,7 +115,7 @@ int main (int argc, char *argv[]) {
 
     // output data
     // formating output file
-    fprintf(filePtr, "  %.2lf  ", T);
+    fprintf(filePtr, "  %u  ", n);
     if (observables.avgE >= 0)
       fprintf(filePtr, " ");
     fprintf(filePtr, "%.3lf  ", observables.avgE);
@@ -142,12 +143,12 @@ int main (int argc, char *argv[]) {
     fprintf(filePtr, "%.3lf  ", observables.Bell);
     fprintf(filePtr, "\n");
 
-		printf("Done for T=%.3lf!\n\n", T);
-  } // end while
+		printf("Done for n=%u!\n\n", n);
+		lattice.freeMemory(&lattice);
+  } // end loop
 
   // the following commands desalocates the memory used
   stopRNG(); // stops random number generator
-  lattice.freeMemory(&lattice);
   observables.freeMemory(&observables);
   fclose(filePtr);
   // printf("\a");
