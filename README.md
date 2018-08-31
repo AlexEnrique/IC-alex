@@ -1,4 +1,4 @@
-# Visualization for the 2D Ising Model.
+# Visualization for the Isotropic 2D Ising Model.
 <h2> Running the visualization </h2>
 
 - Go to [this link](https://alexenrique.github.io/IC-alex/JS-2dIsing/).
@@ -25,6 +25,7 @@ From the left to the right, there are the <code>temperature slider</code> and th
 * The <code>temperature box</code> enables you to change the temperature to what value you want.
 * The button <code>Set temperature</code> changes to the a new temperature, the last one writted in the box or in the slider.
 * The button <code>Phase transition</code> changes the temperature to the phase transition temperature. It will be displayed at the browser console.
+  + Keep in mind that the Boltzmann constant and the coupling term of the Hamiltonian are set to 1.
 
 + The options of <code>Spins arrangment</code> are:
   - Random,
@@ -49,7 +50,7 @@ Using the browser console, you can change and see some values more precisely, fo
 * The value of **B** can be changed doing something like <code>B = float_number</code>.
 * The temperatura and the phase transition temperature can be visualized by entering <code>temperature</code> and <code>phaseTransitionTemp</code>, respectively. 
 * The mean energy and the mean absolute magnetization can be visualized by typing **E** and **Mabs** into the console.
-
+ 
 <hr />
 <h3>Thank you</h3>
 I hope you enjoy the visualization. 
