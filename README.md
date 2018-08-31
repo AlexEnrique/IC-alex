@@ -11,7 +11,7 @@
 <hr />
 
 - Open the console of your browser to see messages from the program.
-- You can change the JS code <code>sketch.js</code> or/and <code>func.js</code> and refresh the index.html page opened.
+- You can change the JS code <code>sketch.js</code> and <code>func.js</code> and refresh the index.html page opened.
 
 <h2> Understanding the simulation </h2>
 
