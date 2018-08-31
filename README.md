@@ -44,7 +44,7 @@ The values used for the magnetic field can be view by typing **B** into your bro
 * The actions buttons <code>start</code>, <code>stop</code>, <code>restart</code> and <code>reset</code> were explained above. 
   
 <h2>Changing and seeing some specific values</h2>
-Using the browser console, you can change and see some values more precisely, for example, the magnetic field.
+Using the browser console (usually <code>ctrl+shift+J</code>), you can change and see some values more precisely, for example, the magnetic field.
   
 * Typing **B** into the console, you can see the exacly value of the magnetic field. 
 * The value of **B** can be changed doing something like <code>B = float_number</code>.
