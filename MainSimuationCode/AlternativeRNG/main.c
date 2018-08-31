@@ -100,7 +100,7 @@ int main (int argc, char *argv[]) {
 
       // Store the new values
       observables.E[i] = observables.energy;
-      observables.M[i] = observables.magnetization;
+      observables.M[i] = fabs(observables.magnetization);
 
       observables.SziArr[i] = observables.Szi;
       observables.SzjArr[i] = observables.Szj;
@@ -123,7 +123,7 @@ int main (int argc, char *argv[]) {
     if (observables.avgE >= 0)
       fprintf(filePtr, " ");
     fprintf(filePtr, "%.3lf  ", observables.avgE);
-    fprintf(filePtr, " %.3lf  ", fabs(observables.avgM));
+    fprintf(filePtr, " %.3lf  ", observables.avgM);
     if (observables.avgSzi >= 0)
       fprintf(filePtr, " ");
     fprintf(filePtr, "%.3lf  ", observables.avgSzi);
