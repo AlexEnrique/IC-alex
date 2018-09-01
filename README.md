@@ -1,12 +1,7 @@
-# Simulações para o projeto final de Iniciação Científica - Alex Enrique Crispim.
+# Simulações para o projeto final de iniciação científica - Alex Enrique Crispim.
 
-This is the repository of the computational simulation to the project "Mapeamento Clássico-Quântico: estudo do modelo de Ising em duas dimensões".
+This is the repository of the computational simulation of the project "Mapeamento Clássico-Quântico: estudo do modelo de Ising em duas dimensões".
 
 
-There are folders to the main code and the data of the simulation to some observables, obteined from the main code. Also, there are graphs created with gnuplot from the data of the simulation and a visual simulation.
-
-The compiled code for 10000 spins is in the path MainSimuationCode/simulation.exe. Keep in mind that 10000 spins is realy a big number to the Monte Carlo + Metropolis algorithm, who are (together) O(n^2) (the 2D Ising Model is a NP-Complete problem).
-
-Other branchs in the repository could be of interest.
-
-In the link (https://alexenrique.github.io/IC-alex/) you will encounter a script visual simulation to the 2D Ising Model. Type ctrl+shift+J to display the console of your browser.
+* There are folders with the main code and the data of the simulation of observables (<code>MainSimulationCode</code> and <code>ObservablesData</code>, respectively), obteined from the main code. Also, there are graphs created with gnuplot from the data of the simulation inside the folder <code>ObservablesGraphs</code>.
+* A visual simulation made with JavaScript can be found on the [branch IsingJS-v1.2](https://github.com/AlexEnrique/IC-alex/tree/IsingJS-v1.2) of this repository. The instructions to the simulation programa are within that branch.
